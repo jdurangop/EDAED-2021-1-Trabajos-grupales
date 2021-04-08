@@ -1,0 +1,19 @@
+Depuración:
+
+Q04_semestre: reemplazar na por promedio de cada carrera
+q05_saber11:
+	antes del 1999-II: 5*(p-100)/3
+	2000 a 2011-II: 5*p
+q06_percentil: no se usará esta variable porque presenta muchas inconsistencias
+
+q08_papa: rellenar na con promedio de cada carrera
+
+q10_estrato: reemplazar "no se conoce" con el promedio de los estratos de los recursos que posee
+
+q25_porcentajearea:
+		0.1 -> 10
+		borrar NA
+
+q27_porcentdivisor:
+		0.5 -> 50
+		

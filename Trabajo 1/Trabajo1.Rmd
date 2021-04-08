@@ -1,0 +1,22 @@
+---
+title: "Trabajo1"
+author: "Jeison Durango"
+date: "4/7/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+## Paquetes usados en el análisis.
+library(tidyverse)
+```
+
+```{r}
+## Lectura de una base de datos tipo ".csv"
+encuesta <- read.csv("encuesta1.csv")
+```
