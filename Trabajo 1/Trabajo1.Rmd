@@ -20,3 +20,74 @@ library(tidyverse)
 ## Lectura de una base de datos tipo ".csv"
 encuesta <- read.csv("encuesta1.csv")
 ```
+
+```{r}
+encuesta <- encuesta %>% 
+  mutate(Q02_FechaNac = as.Date(as.character(Q02_FechaNac), "%Y-%m-%d"))
+encuesta <- encuesta %>% 
+  mutate(Q07_FechaSaber11 = as.Date(as.character(Q07_FechaSaber11), "%Y-%m-%d"))
+```
+
+```{r}
+##Papa por fuera del límite
+encuesta$Q08_PAPA[encuesta$Q08_PAPA == 45 & !is.na(encuesta$Q08_PAPA)] <- 4.5
+```
+
+```{r}
+##Q04_semestre: reemplazar NaN por promedio de cada carrera
+estadisticos <- encuesta %>%
+  filter(Q03_Carrera == "3 : EstadÃ­stica")
+
+promedioSemestreEstadisticos <- round(mean(estadisticos$Q04_Semestre, na.rm=TRUE), 1)
+encuesta$Q04_Semestre[is.na(encuesta$Q04_Semestre)] <- promedioSemestreEstadisticos
+```
+
+```{r}
+##Prueba realizada del 2000 al 2011-2: modificar escala R = 5*P
+encuesta$Q05_Saber11[encuesta$Q05_Saber11 == 73] <- 73*5
+```
+
+```{r}
+##q08_papa: rellenar na con promedio de cada carrera
+promedioPapaEstadisticos <- round(mean(estadisticos$Q08_PAPA[estadisticos$Q04_Semestre >= 2 & estadisticos$Q04_Semestre <= 3], na.rm=TRUE), 1)
+encuesta$Q08_PAPA[is.na(encuesta$Q08_PAPA) & encuesta$Q03_Carrera == "3 : EstadÃ­stica"] <- promedioPapaEstadisticos
+```
+
+```{r}
+##Cambiar fecha del icfes 2021 a 2019 porque está en el semestre 2
+encuesta$Q07_FechaSaber11[encuesta$Q07_FechaSaber11 == as.Date("2021-08-08")] <- as.Date("2019-08-11")
+
+##Cambiar puntaje=0 por promedio de puntajes obtenidos en ese año
+icfes2019 <- encuesta %>%
+  filter(Q07_FechaSaber11 >= as.Date("2019-01-01") & Q07_FechaSaber11 < as.Date("2020-01-01"))
+promedioIcfes2019 <- round(mean(icfes2019$Q05_Saber11))
+encuesta$Q05_Saber11[encuesta$Q05_Saber11 == 0 & encuesta$Q07_FechaSaber11 == as.Date("2019-08-08")] <- promedioIcfes2019
+```
+
+```{r}
+##Se obtiene el valor numérico del estrato
+encuesta <- encuesta %>% 
+  mutate(Q10_Estrato = as.numeric(substr(Q10_Estrato, 5,5)))
+```
+
+```{r}
+##q10_estrato: reemplazar "no se conoce" con el promedio de los estratos de los recursos que posee
+promedioEstratoWifiPropio <- mean(encuesta$Q10_Estrato[encuesta$Q14_RecursosInformaticos..Wifi.propio == 1],  na.rm=TRUE)
+promedioEstratoPortatilPropio <- mean(encuesta$Q10_Estrato[encuesta$Q14_RecursosInformaticos..PortÃ.til.propio == 1],  na.rm=TRUE)
+encuesta$Q10_Estrato[is.na(encuesta$Q10_Estrato)] <- round(mean(promedioEstratoWifiPropio, promedioEstratoPortatilPropio))
+```
+
+
+```{r}
+##Cambiar rango de porcentajes: de 0-1 a 0-100 
+encuesta$Q25_PorcentArea[encuesta$Q25_PorcentArea == 0.1] <- 10
+encuesta$Q27_PorcentDivisor[encuesta$Q27_PorcentDivisor == 0.5] <- 50
+```
+
+
+
+
+
+
+
+
