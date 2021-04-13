@@ -85,6 +85,145 @@ encuesta$Q27_PorcentDivisor[encuesta$Q27_PorcentDivisor == 0.5] <- 50
 ```
 
 
+## Pregunta: ¿quiénes tienen mejor papa por carrera y género?
+
+```{r}
+## Filtros
+
+
+## Filtro mujeres de estadistica.
+
+Pap_fem_sta <- encuesta %>%
+  filter(encuesta$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "3 : EstadÃ­stica")
+
+## Filtro hombres de estadistica.
+
+Pap_mas_sta <- encuesta %>%
+  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "3 : EstadÃ­stica")
+
+## Filtro mujeres de Sistemas.
+
+Pap_fem_sis <- encuesta %>%
+  filter(encuesta$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "2 : IngenierÃ­a de sistemas e informÃ¡tica")
+
+## Filtro hombres de Sistemas.
+
+Pap_mas_sis <- encuesta %>%
+  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "2 : IngenierÃ­a de sistemas e informÃ¡tica")
+
+
+## Las demas variables como son las carreras de Ingenieria Administrativa, Matematicas, Ingenieria Fisica y otras no se van a tomar en cuenta ya que la frecuencia de estas es menor comparadas con las demas (Estadistica e Ingenieria de Sistemas) y no se puede hacer un buen analisis con estas.
+
+```
+
+
+```{r}
+## PROMEDIOS
+
+## Mujeres estadistica
+
+Prom_fem_t <- mean(Pap_fem_sta$Q08_PAPA)
+
+## Hombres estadistica
+
+Prom_mas_t <- mean(Pap_mas_sta$Q08_PAPA)
+
+## Mujeres Sistemas
+
+Prom_fem_s <- mean(Pap_fem_sis$Q08_PAPA)
+## Hombres Sistemas
+
+Prom_mas_s <- mean(Pap_mas_sis$Q08_PAPA)
+
+```
+
+```{r}
+## Grafica
+
+## Se crea una matriz para poder hacer la grafica de barras.
+
+Femenino_estadistica <- Prom_fem_t 
+Mascuino_estadistica <- Prom_mas_t 
+Femenino_Ing.Sistemas <- Prom_fem_s 
+Masculino_Ing.Sistemas <- Prom_mas_s
+
+Tabla_datos <- t(matrix(cbind(Femenino_estadistica, Femenino_Ing.Sistemas, Mascuino_estadistica, Masculino_Ing.Sistemas )))
+
+Tabla_datos
+  colnames(Tabla_datos) <- c("Femenino:estadistica", "Femenino:Ing.Sistemas", "Masculino:estadistica", "Masculino:Ing.Sistemas")
+
+  
+barplot(Tabla_datos,
+        col = c("#469dff"),
+        las = 1, 
+        ylim = c(0, 5), 
+        ylab = "PAPA",
+        main = "P.A.P.A con relación al género y a la carrera", 
+        cex.names = 0.8,
+        space = c(0.7, 0.7, 0.7, 0.7))
+
+```
+## Pregunta: ¿en qué carrera están las mujeres y hombres con el mayor semestre?
+
+```{r}
+dt <- encuesta[,c("Q01_Genero","Q03_Carrera", "Q04_Semestre" )] # Nueva base con las variables para este analisis
+
+#dt <- dt %>%
+#  filter(dt$Q03_Carrera == "3 : Estadística" | dt$Q03_Carrera == "2 : Ingeniería de sistemas e #informática" )
+
+dt$sem_int <- dt$Q04_Semestre
+dt$sem_int[dt$Q04_Semestre >= 1.0 & dt$Q04_Semestre < 2.0]  <- "[1, 2)"
+dt$sem_int[dt$Q04_Semestre >= 2.0 & dt$Q04_Semestre < 3.0]  <- "[2, 3)"
+dt$sem_int[dt$Q04_Semestre >= 3.0 & dt$Q04_Semestre < 4.0]  <- "[3, 4)"
+dt$sem_int[dt$Q04_Semestre >= 4.0 & dt$Q04_Semestre < 5.0]  <- "[4, 5)"
+dt$sem_int[dt$Q04_Semestre >= 5.0 & dt$Q04_Semestre < 6.0]  <- "[5, 6)"
+dt$sem_int[dt$Q04_Semestre >= 6.0 & dt$Q04_Semestre < 7.0]  <- "[6, 7)"
+dt$sem_int[dt$Q04_Semestre >= 7.0 & dt$Q04_Semestre < 8.0]  <- "[7, 8)"
+dt$sem_int[dt$Q04_Semestre >= 8.0 & dt$Q04_Semestre < 9.0]  <- "[8, 9)"
+
+
+dt$car_str <- dt$Q03_Carrera
+dt$car_str[dt$Q03_Carrera == "2 : Ingeniería de sistemas e informática"] <- "Ing.Sistemas"
+dt$car_str[dt$Q03_Carrera == "3 : Estadística"] <- "Estadística"
+
+```
+
+```{r}
+table(dt$Q01_Genero, dt$sem_int)
+table(dt$Q03_Carrera, dt$sem_int)
+table(dt$Q03_Carrera, dt$sem_int,dt$Q01_Genero)
+
+dt_m <- dt %>%
+  filter(dt$Q01_Genero == "1 : Masculino")
+dt_f <- dt %>%
+  filter(dt$Q01_Genero == "2 : Femenino")
+
+a1 <- table(dt_m$car_str, dt_m$sem_int)
+a2 <- table(dt_f$car_str, dt_f$sem_int)
+
+palette(c("#469dff", "#46ff54", "#ff4646", "#ffcd46", "#46ffdd", "#a846ff", "red"))
+
+
+ 
+barplot(a2, 
+        beside = TRUE, 
+        las = 1, 
+        ylim = c(0, 30), 
+        main = "Femenino",
+        col = c(1, 2, 3, 4, 5, 6, 7))
+
+
+barplot(a1, beside = TRUE, 
+        las = 1, 
+        main = "Masculino", 
+        ylim = c(0, 30),
+        col = c(1, 2, 3, 4, 5, 6, 7),
+        legend = TRUE)
+```
+
+
+
+
 
 
 
