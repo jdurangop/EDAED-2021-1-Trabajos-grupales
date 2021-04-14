@@ -18,7 +18,7 @@ library(tidyverse)
 
 ```{r}
 ## Lectura de una base de datos tipo ".csv"
-encuesta <- read.csv("encuesta1.csv")
+encuesta <- read.csv("encuesta1.csv", encoding = "UTF-8")
 ```
 
 ```{r}
@@ -36,7 +36,7 @@ encuesta$Q08_PAPA[encuesta$Q08_PAPA == 45 & !is.na(encuesta$Q08_PAPA)] <- 4.5
 ```{r}
 ##Q04_semestre: reemplazar NaN por promedio de cada carrera
 estadisticos <- encuesta %>%
-  filter(Q03_Carrera == "3 : EstadÃ­stica")
+  filter(Q03_Carrera == "3 : Estadística")
 
 promedioSemestreEstadisticos <- round(mean(estadisticos$Q04_Semestre, na.rm=TRUE), 1)
 encuesta$Q04_Semestre[is.na(encuesta$Q04_Semestre)] <- promedioSemestreEstadisticos
@@ -50,7 +50,7 @@ encuesta$Q05_Saber11[encuesta$Q05_Saber11 == 73] <- 73*5
 ```{r}
 ##q08_papa: rellenar na con promedio de cada carrera
 promedioPapaEstadisticos <- round(mean(estadisticos$Q08_PAPA[estadisticos$Q04_Semestre >= 2 & estadisticos$Q04_Semestre <= 3], na.rm=TRUE), 1)
-encuesta$Q08_PAPA[is.na(encuesta$Q08_PAPA) & encuesta$Q03_Carrera == "3 : EstadÃ­stica"] <- promedioPapaEstadisticos
+encuesta$Q08_PAPA[is.na(encuesta$Q08_PAPA) & encuesta$Q03_Carrera == "3 : Estadística"] <- promedioPapaEstadisticos
 ```
 
 ```{r}
@@ -62,6 +62,7 @@ icfes2019 <- encuesta %>%
   filter(Q07_FechaSaber11 >= as.Date("2019-01-01") & Q07_FechaSaber11 < as.Date("2020-01-01"))
 promedioIcfes2019 <- round(mean(icfes2019$Q05_Saber11))
 encuesta$Q05_Saber11[encuesta$Q05_Saber11 == 0 & encuesta$Q07_FechaSaber11 == as.Date("2019-08-08")] <- promedioIcfes2019
+encuesta$Q05_Saber11[encuesta$Q05_Saber11 > 500 | encuesta$Q05_Saber11 <= 0] <- NaN
 ```
 
 ```{r}
@@ -73,7 +74,7 @@ encuesta <- encuesta %>%
 ```{r}
 ##q10_estrato: reemplazar "no se conoce" con el promedio de los estratos de los recursos que posee
 promedioEstratoWifiPropio <- mean(encuesta$Q10_Estrato[encuesta$Q14_RecursosInformaticos..Wifi.propio == 1],  na.rm=TRUE)
-promedioEstratoPortatilPropio <- mean(encuesta$Q10_Estrato[encuesta$Q14_RecursosInformaticos..PortÃ.til.propio == 1],  na.rm=TRUE)
+promedioEstratoPortatilPropio <- mean(encuesta$Q10_Estrato[encuesta$Q14_RecursosInformaticos..Portátil.propio == 1], na.rm=TRUE)
 encuesta$Q10_Estrato[is.na(encuesta$Q10_Estrato)] <- round(mean(promedioEstratoWifiPropio, promedioEstratoPortatilPropio))
 ```
 
@@ -94,22 +95,22 @@ encuesta$Q27_PorcentDivisor[encuesta$Q27_PorcentDivisor == 0.5] <- 50
 ## Filtro mujeres de estadistica.
 
 Pap_fem_sta <- encuesta %>%
-  filter(encuesta$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "3 : EstadÃ­stica")
+  filter(encuesta$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "3 : Estadística")
 
 ## Filtro hombres de estadistica.
 
 Pap_mas_sta <- encuesta %>%
-  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "3 : EstadÃ­stica")
+  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "3 : Estadística")
 
 ## Filtro mujeres de Sistemas.
 
 Pap_fem_sis <- encuesta %>%
-  filter(encuesta$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "2 : IngenierÃ­a de sistemas e informÃ¡tica")
+  filter(encuesta$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "2 : Ingeniería de sistemas e informática")
 
 ## Filtro hombres de Sistemas.
 
 Pap_mas_sis <- encuesta %>%
-  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "2 : IngenierÃ­a de sistemas e informÃ¡tica")
+  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "2 : Ingeniería de sistemas e informÃ¡tica")
 
 
 ## Las demas variables como son las carreras de Ingenieria Administrativa, Matematicas, Ingenieria Fisica y otras no se van a tomar en cuenta ya que la frecuencia de estas es menor comparadas con las demas (Estadistica e Ingenieria de Sistemas) y no se puede hacer un buen analisis con estas.
@@ -223,7 +224,49 @@ barplot(a1, beside = TRUE,
 
 
 
+###########Jeison
+# ¿Buen icfes = buen PAPA?
+```{r}
+plot(encuesta$Q05_Saber11, encuesta$Q08_PAPA, ylim=c(3,5))
+abline(v=300, col="blue")
+abline(h=3.8, col="red")
+```
+```{r}
+buenPapaIcfes <-  nrow(encuesta %>% filter(Q05_Saber11 >= 300 & Q08_PAPA >= 3.8))
+buenPapaIcfes/nrow(encuesta %>% filter(!is.na(Q05_Saber11) & !is.na(Q08_PAPA)))
+```
+```{r}
+buenPapaIcfes2 <-  nrow(encuesta %>% filter(Q05_Saber11 <= 300 & Q08_PAPA >= 3.8))
+buenPapaIcfes2/nrow(encuesta %>% filter(!is.na(Q05_Saber11) & !is.na(Q08_PAPA)))
+```
+#Histórico puntaje ICFES, hombres vs mujeres
+```{r}
+puntajesIcfes <- encuesta %>% 
+  mutate(añoIcfes = format(encuesta$Q07_FechaSaber11,"%Y")) %>%
+  select(Q01_Genero, Q05_Saber11, añoIcfes)
 
+puntajesHombres <- puntajesIcfes %>% filter(Q01_Genero == "1 : Masculino") %>%
+  group_by(añoIcfes) %>% summarise(puntajePromedio = mean(Q05_Saber11, na.rm=TRUE))
+
+puntajesMujeres <- puntajesIcfes %>% filter(Q01_Genero == "2 : Femenino") %>%
+  group_by(añoIcfes) %>% summarise(puntajePromedio = mean(Q05_Saber11, na.rm=TRUE))
+
+plot(puntajesHombres$añoIcfes, puntajesHombres$puntajePromedio, type = "b",
+     frame = FALSE, pch = 19, col = "red", xlab = "Año", ylab = "Puntaje",
+     xlim=c(2008,2020), ylim=c(0,500))
+
+lines(puntajesMujeres$añoIcfes, puntajesMujeres$puntajePromedio, pch = 19,
+      col = "blue", type = "b", lty = 1)
+
+legend("topleft", legend=c("Hombres", "Mujeres"),
+       col=c("red", "blue"), lty = 1:1, cex=0.8)
+```
+
+
+
+
+
+###########Jeison
 
 
 
