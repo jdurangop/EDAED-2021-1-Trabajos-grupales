@@ -183,15 +183,16 @@ dt$sem_int[dt$Q04_Semestre >= 8.0 & dt$Q04_Semestre < 9.0]  <- "[8, 9)"
 
 
 dt$car_str <- dt$Q03_Carrera
-dt$car_str[dt$Q03_Carrera == "2 : Ingeniería de sistemas e informática"] <- "Ing.Sistemas"
-dt$car_str[dt$Q03_Carrera == "3 : Estadística"] <- "Estadística"
-
+dt$car_str[dt$Q03_Carrera == "2 : IngenierÃ­a de sistemas e informÃ¡tica"] <- "Ing.Sistemas"
+dt$car_str[dt$Q03_Carrera == "3 : EstadÃ­stica"] <- "Estadistica"
+dt$car_str[dt$Q03_Carrera == "1 : MatemÃ¡ticas"] <- "Matematicas"
+dt$car_str[dt$Q03_Carrera == "4 : IngenierÃ­a administrativa"] <- "Ing.Administrativa"
+dt$car_str[dt$Q03_Carrera == "5 : IngenierÃ­a fÃ­sica"] <- "Ing.Fisica"
+dt$car_str[dt$Q03_Carrera == "7 : Otra"] <- "Otra"
+dt$car_str[dt$Q03_Carrera == "6 : IngenierÃ­a industrial"] <- "Ing.Industrial"
 ```
 
 ```{r}
-table(dt$Q01_Genero, dt$sem_int)
-table(dt$Q03_Carrera, dt$sem_int)
-table(dt$Q03_Carrera, dt$sem_int,dt$Q01_Genero)
 
 dt_m <- dt %>%
   filter(dt$Q01_Genero == "1 : Masculino")
@@ -221,9 +222,64 @@ barplot(a1, beside = TRUE,
         legend = TRUE)
 ```
 
+## Pregunta: ¿las personas de menor estrato que viven en el area metropolitana creen en más conspiraciones?
+
+```{r}
+# filtro de las personas que viven en el area metropolitana
+
+per_metro <- encuesta %>%
+  filter(encuesta$Q09_EnAreaMetropolitana == 1)
+
+
+## Se toman en cuenta las personas que creen en conspiraciones falsas.
+
+#El hombre nunca llegó a la luna, es un montaje de Hollywood.
+
+#Las vacunas no sirven y son una conspiración de las multinacionales farmacéuticas para enriquecerse.
+
+#La tierra es hueca y en su interior existe una civilización oculta
+
+#Los alienígenas visitaron las civilizaciones antiguas, influyeron en sus historia y construyeron los mega monumentos de la antiguedad
+
+#Los efectos del cambio climático son naturales, y el escándalo se debe a conspiraciones de ambientalistas y de ciertos gremios económicos.
+
+# Las ráfagas solares causan los sismos en la tierra.
+
+
+## las personas que al menos crean en una de estas conspiraciones falsas será tomada como un "SI" de que si cree en conspiraciones falsas y las demas serán marcadas con "NO".
+
+## Se crea una nueva variable para guardar estos datos
+
+
+per_metro$cree_sn[per_metro$Q15_Alunizaje == 1 | 
+                    per_metro$Q18_Vacunas == 1 | 
+                    per_metro$Q21_TierraHueca == 1|
+                    per_metro$Q22_alienigenas == 1 |
+                    per_metro$Q23_CambioClimatico == 1 |
+                    per_metro$Q20_RafagasSolares == 1] <- "SI"
 
 
 
+creen_cons <- per_metro %>%
+  filter
+
+creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 2] <- "Estrato 2"
+creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 3] <- "Estrato 3"
+creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 4] <- "Estrato 4"
+creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 5] <- "Estrato 5"
+
+tabla_metro <- table(creen_cons$Q10_Estrato, creen_cons$cree_sn)
+
+barplot(tabla_metro, 
+        legend = TRUE, 
+        ylim = c(0, 25),
+        beside = TRUE ,
+        col = c(1, 2, 3, 4),
+        main = "Cantidad de personas que creen en conspiraciones falsas por estrato\n Area metropolitana",
+        names = "")
+
+
+```
 
 
 
