@@ -110,7 +110,7 @@ Pap_fem_sis <- encuesta %>%
 ## Filtro hombres de Sistemas.
 
 Pap_mas_sis <- encuesta %>%
-  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "2 : Ingeniería de sistemas e informÃ¡tica")
+  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "2 : Ingeniería de sistemas e informática")
 
 
 ## Las demas variables como son las carreras de Ingenieria Administrativa, Matematicas, Ingenieria Fisica y otras no se van a tomar en cuenta ya que la frecuencia de estas es menor comparadas con las demas (Estadistica e Ingenieria de Sistemas) y no se puede hacer un buen analisis con estas.
@@ -182,7 +182,6 @@ dt$sem_int[dt$Q04_Semestre >= 6.0 & dt$Q04_Semestre < 7.0]  <- "[6, 7)"
 dt$sem_int[dt$Q04_Semestre >= 7.0 & dt$Q04_Semestre < 8.0]  <- "[7, 8)"
 dt$sem_int[dt$Q04_Semestre >= 8.0 & dt$Q04_Semestre < 9.0]  <- "[8, 9)"
 
-
 dt$car_str <- dt$Q03_Carrera
 dt$car_str[dt$Q03_Carrera == "2 : Ingeniería de sistemas e informática"] <- "Ing.Sistemas"
 dt$car_str[dt$Q03_Carrera == "3 : Estadística"] <- "Estadística"
@@ -247,49 +246,6 @@ per_metro <- encuesta %>%
 
 # Las ráfagas solares causan los sismos en la tierra.
 ```
-
-###########Jeison
-# ¿Buen icfes = buen PAPA?
-```{r}
-plot(encuesta$Q05_Saber11, encuesta$Q08_PAPA, ylim=c(3,5))
-abline(v=300, col="blue")
-abline(h=3.8, col="red")
-```
-```{r}
-buenPapaIcfes <-  nrow(encuesta %>% filter(Q05_Saber11 >= 300 & Q08_PAPA >= 3.8))
-buenPapaIcfes/nrow(encuesta %>% filter(!is.na(Q05_Saber11) & !is.na(Q08_PAPA)))
-```
-```{r}
-buenPapaIcfes2 <-  nrow(encuesta %>% filter(Q05_Saber11 <= 300 & Q08_PAPA >= 3.8))
-buenPapaIcfes2/nrow(encuesta %>% filter(!is.na(Q05_Saber11) & !is.na(Q08_PAPA)))
-```
-#Histórico puntaje ICFES, hombres vs mujeres
-```{r}
-puntajesIcfes <- encuesta %>% 
-  mutate(añoIcfes = format(encuesta$Q07_FechaSaber11,"%Y")) %>%
-  select(Q01_Genero, Q05_Saber11, añoIcfes)
-
-puntajesHombres <- puntajesIcfes %>% filter(Q01_Genero == "1 : Masculino") %>%
-  group_by(añoIcfes) %>% summarise(puntajePromedio = mean(Q05_Saber11, na.rm=TRUE))
-
-puntajesMujeres <- puntajesIcfes %>% filter(Q01_Genero == "2 : Femenino") %>%
-  group_by(añoIcfes) %>% summarise(puntajePromedio = mean(Q05_Saber11, na.rm=TRUE))
-
-plot(puntajesHombres$añoIcfes, puntajesHombres$puntajePromedio, type = "b",
-     frame = FALSE, pch = 19, col = "red", xlab = "Año", ylab = "Puntaje",
-     xlim=c(2008,2020), ylim=c(0,500))
-
-lines(puntajesMujeres$añoIcfes, puntajesMujeres$puntajePromedio, pch = 19,
-      col = "blue", type = "b", lty = 1)
-
-legend("topleft", legend=c("Hombres", "Mujeres"),
-       col=c("red", "blue"), lty = 1:1, cex=0.8)
-```
-
-
-
-
-
 ## las personas que al menos crean en una de estas conspiraciones falsas será tomada como un "SI" de que si cree en conspiraciones falsas y las demas serán marcadas con "NO".
 
 ## Se crea una nueva variable para guardar estos datos
@@ -324,9 +280,44 @@ barplot(tabla_metro,
 
 
 ```
+###########Jeison
+# ¿Buen icfes = buen PAPA?
 ```{r}
-
+plot(encuesta$Q05_Saber11, encuesta$Q08_PAPA, ylim=c(3,5))
+abline(v=300, col="blue")
+abline(h=3.8, col="red")
 ```
+```{r}
+buenPapaIcfes <-  nrow(encuesta %>% filter(Q05_Saber11 >= 300 & Q08_PAPA >= 3.8))
+buenPapaIcfes/nrow(encuesta %>% filter(!is.na(Q05_Saber11) & !is.na(Q08_PAPA)))
+```
+```{r}
+buenPapaIcfes2 <-  nrow(encuesta %>% filter(Q05_Saber11 <= 300 & Q08_PAPA >= 3.8))
+buenPapaIcfes2/nrow(encuesta %>% filter(!is.na(Q05_Saber11) & !is.na(Q08_PAPA)))
+```
+#Histórico puntaje ICFES, hombres vs mujeres
+```{r}
+puntajesIcfes <- encuesta %>% 
+  mutate(añoIcfes = format(encuesta$Q07_FechaSaber11,"%Y")) %>%
+  select(Q01_Genero, Q05_Saber11, añoIcfes)
+
+puntajesHombres <- puntajesIcfes %>% filter(Q01_Genero == "1 : Masculino") %>%
+  group_by(añoIcfes) %>% summarise(puntajePromedio = mean(Q05_Saber11, na.rm=TRUE))
+
+puntajesMujeres <- puntajesIcfes %>% filter(Q01_Genero == "2 : Femenino") %>%
+  group_by(añoIcfes) %>% summarise(puntajePromedio = mean(Q05_Saber11, na.rm=TRUE))
+
+plot(puntajesHombres$añoIcfes, puntajesHombres$puntajePromedio, type = "b",
+     frame = FALSE, pch = 19, col = "red", xlab = "Año de presentación", ylab = "Puntaje",
+     xlim=c(2013,2019), ylim=c(0,500))
+
+lines(puntajesMujeres$añoIcfes, puntajesMujeres$puntajePromedio, pch = 19,
+      col = "blue", type = "b", lty = 1)
+
+legend("topleft", legend=c("Hombres", "Mujeres"),
+       col=c("red", "blue"), lty = 1:1, cex=0.8)
+```
+###########Jeison
 
 
 
