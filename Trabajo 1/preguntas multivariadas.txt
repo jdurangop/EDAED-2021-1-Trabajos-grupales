@@ -1,21 +1,21 @@
 preguntas:
-++carrera con icfes
+++carrera con icfes	-Isa-
 genero con icfes
 papa con el semestre
 papa con carrera
 recursos con el estrato
-++buen icfes = buen papa?
+++buen icfes = buen papa?	-Jeison-
 mayores estratos están en el area metropolitana?
 género con carrera
-++las personas que creen en las vacunas son más optimistas? p25
+++las personas que creen en las vacunas son más optimistas? p25	-Isa-
 
-++las personas que respondieron las 2 preguntas buenas tienen mayor papa
-++las personas de menor estrato que viven en el area metropolitana creen en más conspiraciones?
-++en qué carrera están las mujeres y hombres con el mayor semestre?
-++quiénes tienen mejor papa por carrera y género?
-++carreras que hayan instalado r y rsutidio
+++las personas que respondieron las 2 preguntas buenas tienen mayor papa	-Isa-
+++las personas de menor estrato que viven en el area metropolitana creen en más conspiraciones?		-Joelle-
+++en qué carrera están las mujeres y hombres con el mayor semestre?	-Joelle-
+++quiénes tienen mejor papa por carrera y género?	-Joelle-
+++carreras que hayan instalado r y rsutidio		-Jeison-
 estratos y recursos tecnológicos**
 de cuál carrera y de cuál género son las personas que respondieron en menor tiempo
 las personas que tienen internet wifi y celular creen en más conspiraciones
-++hombres jóvenes creen en los alienígenas ancestrales?
-++a qué género le fue mejor según la fecha de las icfes
+++hombres jóvenes creen en los alienígenas ancestrales?		-Jeison-
+++a qué género le fue mejor según la fecha de las icfes		-Jeison-
