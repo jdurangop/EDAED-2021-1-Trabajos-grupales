@@ -246,6 +246,7 @@ per_metro <- encuesta %>%
 #Los efectos del cambio climático son naturales, y el escándalo se debe a conspiraciones de ambientalistas y de ciertos gremios económicos.
 
 # Las ráfagas solares causan los sismos en la tierra.
+```
 
 ###########Jeison
 # ¿Buen icfes = buen PAPA?
@@ -293,7 +294,7 @@ legend("topleft", legend=c("Hombres", "Mujeres"),
 
 ## Se crea una nueva variable para guardar estos datos
 
-
+```{r}
 per_metro$cree_sn[per_metro$Q15_Alunizaje == 1 | 
                     per_metro$Q18_Vacunas == 1 | 
                     per_metro$Q21_TierraHueca == 1|
@@ -321,6 +322,9 @@ barplot(tabla_metro,
         main = "Cantidad de personas que creen en conspiraciones falsas por estrato\n Area metropolitana",
         names = "")
 
+
+```
+```{r}
 
 ```
 
