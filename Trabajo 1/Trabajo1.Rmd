@@ -89,32 +89,47 @@ encuesta$Q27_PorcentDivisor[encuesta$Q27_PorcentDivisor == 0.5] <- 50
 ## Pregunta: ¿quiénes tienen mejor papa por carrera y género?
 
 ```{r}
+## Se crea una nueva base de datos solo con los datos de la pregunta.
+
+# Carrera, Genero, papa. 
+
+baseCarGenPap <- encuesta[,c("Q01_Genero", "Q03_Carrera", "Q08_PAPA")]
+
+# Se cambia el nombre de las carreras de menor frecuencia en la base de datos por "Otras"
+
+baseCarGenPap$Q03_Carrera[baseCarGenPap$Q03_Carrera == "1 : Matemáticas" |
+                            baseCarGenPap$Q03_Carrera == "6 : Ingeniería industrial" |
+                            baseCarGenPap$Q03_Carrera == "5 : Ingeniería física" |
+                            baseCarGenPap$Q03_Carrera == "4 : Ingeniería administrativa"] <- "Otras"
+
 ## Filtros
-
-
 
 ## Filtro mujeres de estadistica.
 
-femeninoEstadistica <- encuesta %>%
-  filter(encuesta$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "3 : Estadística")
+femeninoEstadistica <- baseCarGenPap %>%
+  filter(baseCarGenPap$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "3 : Estadística")
 
 ## Filtro hombres de estadistica.
 
-masculinoEstadistica <- encuesta %>%
-  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "3 : Estadística")
+masculinoEstadistica <- baseCarGenPap %>%
+  filter(baseCarGenPap$Q01_Genero == "1 : Masculino" & baseCarGenPap$Q03_Carrera == "3 : Estadística")
 
 ## Filtro mujeres de Sistemas.
 
-femeninoSistemas <- encuesta %>%
-  filter(encuesta$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "2 : Ingeniería de sistemas e informática")
+femeninoSistemas <- baseCarGenPap %>%
+  filter(baseCarGenPap$Q01_Genero == "2 : Femenino" & baseCarGenPap$Q03_Carrera == "2 : Ingeniería de sistemas e informática")
 
 ## Filtro hombres de Sistemas.
 
-masculinoSistemas <- encuesta %>%
-  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "2 : Ingeniería de sistemas e informática")
+masculinoSistemas <- baseCarGenPap %>%
+  filter(baseCarGenPap$Q01_Genero == "1 : Masculino" & baseCarGenPap$Q03_Carrera == "2 : Ingeniería de sistemas e informática")
 
+## Filtro Hombres otras
 
-## Las demas variables como son las carreras de Ingenieria Administrativa, Matematicas, Ingenieria Fisica y otras no se van a tomar en cuenta ya que la frecuencia de estas es menor comparadas con las demas (Estadistica e Ingenieria de Sistemas) y no se puede hacer un buen analisis con estas.
+masculinoOtras <- baseCarGenPap %>%
+  filter(baseCarGenPap$Q01_Genero == "1 : Masculino" & baseCarGenPap$Q03_Carrera == "Otras")
+
+## De la variable "Otras" no hay datos de genero Femenino
 
 ```
 
@@ -137,6 +152,12 @@ PromedioFemSistema <- mean(femeninoSistemas$Q08_PAPA)
 
 PromedioMasSistema <- mean(masculinoSistemas$Q08_PAPA)
 
+## Hombres Otras
+
+PromedioMasOtras <- mean(masculinoOtras$Q08_PAPA)
+
+PromedioMasOtras
+
 ```
 
 ```{r}
@@ -144,10 +165,10 @@ PromedioMasSistema <- mean(masculinoSistemas$Q08_PAPA)
 
 ## Se crea una matriz para poder hacer la grafica de barras.
 
-Tabla_datos <- t(matrix(cbind(PromedioFemEstadis, PromedioFemSistema, PromedioMasEstadis, PromedioMasSistema)))
+Tabla_datos <- t(matrix(cbind(PromedioFemEstadis, PromedioFemSistema, PromedioMasEstadis, PromedioMasSistema, PromedioMasOtras)))
 
 Tabla_datos
-  colnames(Tabla_datos) <- c("Femenino:estadistica", "Femenino:Ing.Sistemas", "Masculino:estadistica", "Masculino:Ing.Sistemas")
+  colnames(Tabla_datos) <- c("Femenino:estadistica", "Femenino:Ing.Sistemas", "Masculino:estadistica", "Masculino:Ing.Sistemas", "Masculino:Otras")
 
   
 barplot(Tabla_datos,
@@ -156,8 +177,9 @@ barplot(Tabla_datos,
         ylim = c(0, 5), 
         ylab = "PAPA",
         main = "P.A.P.A con relación al género y a la carrera", 
-        cex.names = 0.8,
-        space = c(0.7, 0.7, 0.7, 0.7))
+        cex.names = 0.7,
+        space = c(1, 1, 1, 1, 1),
+        las = 1)
 
 ```
 ## Pregunta: ¿en qué carrera están las mujeres y hombres con el mayor semestre?
@@ -199,8 +221,6 @@ masculinoCarSem <- table(tablaMasculina$carreras, tablaMasculina$semestreInterva
 femeninoCarSem <- table(tablaFemenina$carreras, tablaFemenina$semestreIntervalo)
 
 palette(c("#469dff", "#46ff54", "#ff4646", "#ffcd46", "#46ffdd", "#a846ff", "#FFF798"))
-
-
  
 barplot(femeninoCarSem, 
         beside = TRUE, 
