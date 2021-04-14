@@ -202,7 +202,7 @@ dt_f <- dt %>%
 a1 <- table(dt_m$car_str, dt_m$sem_int)
 a2 <- table(dt_f$car_str, dt_f$sem_int)
 
-palette(c("#469dff", "#46ff54", "#ff4646", "#ffcd46", "#46ffdd", "#a846ff", "red"))
+palette(c("#469dff", "#46ff54", "#ff4646", "#ffcd46", "#46ffdd", "#a846ff", "#FFF798"))
 
 
  
@@ -210,19 +210,42 @@ barplot(a2,
         beside = TRUE, 
         las = 1, 
         ylim = c(0, 30), 
-        main = "Femenino",
-        col = c(1, 2, 3, 4, 5, 6, 7))
+        main = "Femenino - semestre",
+        col = c(1, 2),
+        legend = TRUE)
 
 
 barplot(a1, beside = TRUE, 
         las = 1, 
-        main = "Masculino", 
+        main = "Masculino - semestre", 
         ylim = c(0, 30),
         col = c(1, 2, 3, 4, 5, 6, 7),
         legend = TRUE)
+
 ```
 
+## Pregunta: ¿las personas de menor estrato que viven en el area metropolitana creen en más conspiraciones?
 
+```{r}
+# filtro de las personas que viven en el area metropolitana
+
+per_metro <- encuesta %>%
+  filter(encuesta$Q09_EnAreaMetropolitana == 1)
+
+
+## Se toman en cuenta las personas que creen en conspiraciones falsas.
+
+#El hombre nunca llegó a la luna, es un montaje de Hollywood.
+
+#Las vacunas no sirven y son una conspiración de las multinacionales farmacéuticas para enriquecerse.
+
+#La tierra es hueca y en su interior existe una civilización oculta
+
+#Los alienígenas visitaron las civilizaciones antiguas, influyeron en sus historia y construyeron los mega monumentos de la antiguedad
+
+#Los efectos del cambio climático son naturales, y el escándalo se debe a conspiraciones de ambientalistas y de ciertos gremios económicos.
+
+# Las ráfagas solares causan los sismos en la tierra.
 
 ###########Jeison
 # ¿Buen icfes = buen PAPA?
@@ -266,7 +289,40 @@ legend("topleft", legend=c("Hombres", "Mujeres"),
 
 
 
-###########Jeison
+## las personas que al menos crean en una de estas conspiraciones falsas será tomada como un "SI" de que si cree en conspiraciones falsas y las demas serán marcadas con "NO".
+
+## Se crea una nueva variable para guardar estos datos
+
+
+per_metro$cree_sn[per_metro$Q15_Alunizaje == 1 | 
+                    per_metro$Q18_Vacunas == 1 | 
+                    per_metro$Q21_TierraHueca == 1|
+                    per_metro$Q22_alienigenas == 1 |
+                    per_metro$Q23_CambioClimatico == 1 |
+                    per_metro$Q20_RafagasSolares == 1] <- "SI"
+
+
+
+creen_cons <- per_metro %>%
+  filter
+
+creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 2] <- "Estrato 2"
+creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 3] <- "Estrato 3"
+creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 4] <- "Estrato 4"
+creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 5] <- "Estrato 5"
+
+tabla_metro <- table(creen_cons$Q10_Estrato, creen_cons$cree_sn)
+
+barplot(tabla_metro, 
+        legend = TRUE, 
+        ylim = c(0, 25),
+        beside = TRUE ,
+        col = c(1, 2, 3, 4),
+        main = "Cantidad de personas que creen en conspiraciones falsas por estrato\n Area metropolitana",
+        names = "")
+
+
+```
 
 
 
