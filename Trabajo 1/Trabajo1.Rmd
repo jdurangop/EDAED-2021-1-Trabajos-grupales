@@ -86,7 +86,9 @@ encuesta$Q27_PorcentDivisor[encuesta$Q27_PorcentDivisor == 0.5] <- 50
 ```
 
 
-## Pregunta: ¿quiénes tienen mejor papa por carrera y género?
+<h2>Pregunta: ¿quiénes tienen mejor papa por carrera y género?</h2>  
+
+<p>Se espera que los hombres de Ingeniería de Sistemas tengan un mejor promedio que el resto.</p>
 
 ```{r}
 ## Se crea una nueva base de datos solo con los datos de la pregunta.
@@ -130,7 +132,7 @@ masculinoOtras <- baseCarGenPap %>%
   filter(baseCarGenPap$Q01_Genero == "1 : Masculino" & baseCarGenPap$Q03_Carrera == "Otras")
 
 ## De la variable "Otras" no hay datos de genero Femenino
-
+ 
 ```
 
 
@@ -156,10 +158,8 @@ PromedioMasSistema <- mean(masculinoSistemas$Q08_PAPA)
 
 PromedioMasOtras <- mean(masculinoOtras$Q08_PAPA)
 
-PromedioMasOtras
-
 ```
-
+<div align = "center">
 ```{r}
 ## Grafica
 
@@ -168,7 +168,7 @@ PromedioMasOtras
 Tabla_datos <- t(matrix(cbind(PromedioFemEstadis, PromedioFemSistema, PromedioMasEstadis, PromedioMasSistema, PromedioMasOtras)))
 
 Tabla_datos
-  colnames(Tabla_datos) <- c("Femenino:estadistica", "Femenino:Ing.Sistemas", "Masculino:estadistica", "Masculino:Ing.Sistemas", "Masculino:Otras")
+  colnames(Tabla_datos) <- c("Femenino:estadistica", "Femenino:Sistemas", "Masculino:estadistica", "Masculino:Sistemas", "Masculino:Otras")
 
   
 barplot(Tabla_datos,
@@ -180,9 +180,18 @@ barplot(Tabla_datos,
         cex.names = 0.7,
         space = c(1, 1, 1, 1, 1),
         las = 1)
-
 ```
-## Pregunta: ¿en qué carrera están las mujeres y hombres con el mayor semestre?
+</div>
+
+<p>
+En general el promedio del PAPA de las carreras tomadas por género varian muy poco, todos estos promedios están en un valor que tiende a 4.<br>
+<br>
+La respuesta real a esta pregunta es que en promedio las mujeres que están en la carrera de Ingeniería de Sistemas son las que tienden a tener un mayor PAPA que el resto de generos y carreras</p>
+
+
+<h2>Pregunta: ¿en qué carrera están las mujeres y hombres con el mayor semestre?</h2>
+
+<p>Se espera que las mujeres y hombres de Ingenieria de Sistemas son los que están en los semestres más altos.</p>
 
 ```{r}
 baseCarGenSem <- encuesta[,c("Q01_Genero","Q03_Carrera", "Q04_Semestre" )] # Nueva base con las variables para este analisis
@@ -208,6 +217,8 @@ baseCarGenSem$carreras[baseCarGenSem$Q03_Carrera == "1 : Matemáticas" |
              baseCarGenSem$Q03_Carrera == "7 : Otra"] <- "Otras"
 
 ```
+
+<div align = "center">
 
 ```{r}
 
@@ -237,10 +248,21 @@ barplot(masculinoCarSem, beside = TRUE,
         ylim = c(0, 30),
         col = c(1, 2, 3),
         legend = TRUE)
+ 
 
 ```
+</div>
 
-## Pregunta: ¿las personas de menor estrato que viven en el area metropolitana creen en más conspiraciones?
+<p>
+En los semestres más bajos que serían del 1 al 3 hay más concentración de estudiantes de la carrera de Estádistica, por otro lado en los semestres más altos hay más concentración de estudiantes de Ingeniería de Sistemas y otras carreras(Ingeniería Física, Ingeniería Administrativa, Ingeniería Industrial, Matemáticas y Otras).<br>
+<br>
+La respuesta real a esta pregunta es que con respecto al género masculino los estudiantes de otras carreras aunque en menor frecuencia son los que están en el semetre más alto, seguidos por los estdiantes de Ingeniería de Sistemas y algunos pocos de Estadística.
+
+</p>
+
+<h2>Pregunta: ¿En el área Metropolitana qué estrato tiende a creer más en las conspiraciones falsas?</h2>
+
+<p>Se espera que las personas de estratos bajos(Estratos 1, 2 y 3) en el área Metropolitana tienden a creer más en conspiraciones</p>
 
 ```{r}
 # filtro de las personas que viven en el area metropolitana
@@ -264,11 +286,7 @@ personarAreaMetro <- encuesta %>%
 # Las ráfagas solares causan los sismos en la tierra.
 
 ## las personas que al menos crean en una de estas conspiraciones falsas será tomada como un "SI" de que si cree en conspiraciones falsas y las demas serán marcadas con "NO".
-```
 
-
-
-```{r}
 
 ## Se crea una nueva variable para guardar estos datos
 
@@ -279,6 +297,11 @@ personarAreaMetro$creenEnConspira[personarAreaMetro$Q15_Alunizaje == 1 |
                     personarAreaMetro$Q23_CambioClimatico == 1 |
                     personarAreaMetro$Q20_RafagasSolares == 1] <- "SI"
 
+```
+
+<div align = "center">
+
+```{r}
 
 # Se filtran las personas que creen en conspiraciones falsas
 siCreen <- personarAreaMetro %>%
@@ -300,9 +323,17 @@ barplot(tablaAreaMetro,
         col = c(1, 2, 3, 4),
         main = "Cantidad de personas que creen en conspiraciones falsas por estrato\n Area metropolitana",
         names = "")
-
-
+ 
 ```
+</div>
+
+
+<p>
+Las personas de estratos altos(Estratos 4, 5 y 6) tienen una muy baja frecuencia en la base de datos representando el 8.3% del total, además de que en la base de datos no hay estduantes de estrato 6. En la base de datos no hay estudiantes de estrato 1 que estén dentro del área Metropolitana, por lo tanto no estran en la gráfica.<br>
+<br>
+La respuesta real a esta pregunta es que efectivamente que las personas de estratos bajos son los que tienden a creer más en conspiraciones falsas.
+</p>
+
 ###########Jeison
 # ¿Buen icfes = buen PAPA?
 ```{r}
