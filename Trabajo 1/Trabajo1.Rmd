@@ -202,7 +202,7 @@ dt_f <- dt %>%
 a1 <- table(dt_m$car_str, dt_m$sem_int)
 a2 <- table(dt_f$car_str, dt_f$sem_int)
 
-palette(c("#469dff", "#46ff54", "#ff4646", "#ffcd46", "#46ffdd", "#a846ff", "red"))
+palette(c("#469dff", "#46ff54", "#ff4646", "#ffcd46", "#46ffdd", "#a846ff", "#FFF798"))
 
 
  
@@ -210,16 +210,18 @@ barplot(a2,
         beside = TRUE, 
         las = 1, 
         ylim = c(0, 30), 
-        main = "Femenino",
-        col = c(1, 2, 3, 4, 5, 6, 7))
+        main = "Femenino - semestre",
+        col = c(1, 2),
+        legend = TRUE)
 
 
 barplot(a1, beside = TRUE, 
         las = 1, 
-        main = "Masculino", 
+        main = "Masculino - semestre", 
         ylim = c(0, 30),
         col = c(1, 2, 3, 4, 5, 6, 7),
         legend = TRUE)
+
 ```
 
 ## Pregunta: ¿las personas de menor estrato que viven en el area metropolitana creen en más conspiraciones?
