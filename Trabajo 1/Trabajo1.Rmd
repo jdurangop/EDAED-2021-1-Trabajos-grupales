@@ -86,35 +86,53 @@ encuesta$Q27_PorcentDivisor[encuesta$Q27_PorcentDivisor == 0.5] <- 50
 ```
 
 
-## Pregunta: ¿quiénes tienen mejor papa por carrera y género?
+<h2>Pregunta: ¿quiénes tienen mejor papa por carrera y género?</h2>  
+
+<p>Se espera que los hombres de Ingeniería de Sistemas tengan un mejor promedio que el resto.</p>
 
 ```{r}
-## Filtros
+## Se crea una nueva base de datos solo con los datos de la pregunta.
 
+# Carrera, Genero, papa. 
+
+baseCarGenPap <- encuesta[,c("Q01_Genero", "Q03_Carrera", "Q08_PAPA")]
+
+# Se cambia el nombre de las carreras de menor frecuencia en la base de datos por "Otras"
+
+baseCarGenPap$Q03_Carrera[baseCarGenPap$Q03_Carrera == "1 : Matemáticas" |
+                            baseCarGenPap$Q03_Carrera == "6 : Ingeniería industrial" |
+                            baseCarGenPap$Q03_Carrera == "5 : Ingeniería física" |
+                            baseCarGenPap$Q03_Carrera == "4 : Ingeniería administrativa"] <- "Otras"
+
+## Filtros
 
 ## Filtro mujeres de estadistica.
 
-Pap_fem_sta <- encuesta %>%
-  filter(encuesta$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "3 : Estadística")
+femeninoEstadistica <- baseCarGenPap %>%
+  filter(baseCarGenPap$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "3 : Estadística")
 
 ## Filtro hombres de estadistica.
 
-Pap_mas_sta <- encuesta %>%
-  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "3 : Estadística")
+masculinoEstadistica <- baseCarGenPap %>%
+  filter(baseCarGenPap$Q01_Genero == "1 : Masculino" & baseCarGenPap$Q03_Carrera == "3 : Estadística")
 
 ## Filtro mujeres de Sistemas.
 
-Pap_fem_sis <- encuesta %>%
-  filter(encuesta$Q01_Genero == "2 : Femenino" & encuesta$Q03_Carrera == "2 : Ingeniería de sistemas e informática")
+femeninoSistemas <- baseCarGenPap %>%
+  filter(baseCarGenPap$Q01_Genero == "2 : Femenino" & baseCarGenPap$Q03_Carrera == "2 : Ingeniería de sistemas e informática")
 
 ## Filtro hombres de Sistemas.
 
-Pap_mas_sis <- encuesta %>%
-  filter(encuesta$Q01_Genero == "1 : Masculino" & encuesta$Q03_Carrera == "2 : Ingeniería de sistemas e informática")
+masculinoSistemas <- baseCarGenPap %>%
+  filter(baseCarGenPap$Q01_Genero == "1 : Masculino" & baseCarGenPap$Q03_Carrera == "2 : Ingeniería de sistemas e informática")
 
+## Filtro Hombres otras
 
-## Las demas variables como son las carreras de Ingenieria Administrativa, Matematicas, Ingenieria Fisica y otras no se van a tomar en cuenta ya que la frecuencia de estas es menor comparadas con las demas (Estadistica e Ingenieria de Sistemas) y no se puede hacer un buen analisis con estas.
+masculinoOtras <- baseCarGenPap %>%
+  filter(baseCarGenPap$Q01_Genero == "1 : Masculino" & baseCarGenPap$Q03_Carrera == "Otras")
 
+## De la variable "Otras" no hay datos de genero Femenino
+ 
 ```
 
 
@@ -123,35 +141,34 @@ Pap_mas_sis <- encuesta %>%
 
 ## Mujeres estadistica
 
-Prom_fem_t <- mean(Pap_fem_sta$Q08_PAPA)
+PromedioFemEstadis <- mean(femeninoEstadistica$Q08_PAPA)
 
 ## Hombres estadistica
 
-Prom_mas_t <- mean(Pap_mas_sta$Q08_PAPA)
+PromedioMasEstadis <- mean(masculinoEstadistica$Q08_PAPA)
 
 ## Mujeres Sistemas
 
-Prom_fem_s <- mean(Pap_fem_sis$Q08_PAPA)
+PromedioFemSistema <- mean(femeninoSistemas$Q08_PAPA)
 ## Hombres Sistemas
 
-Prom_mas_s <- mean(Pap_mas_sis$Q08_PAPA)
+PromedioMasSistema <- mean(masculinoSistemas$Q08_PAPA)
+
+## Hombres Otras
+
+PromedioMasOtras <- mean(masculinoOtras$Q08_PAPA)
 
 ```
-
+<div align = "center">
 ```{r}
 ## Grafica
 
 ## Se crea una matriz para poder hacer la grafica de barras.
 
-Femenino_estadistica <- Prom_fem_t 
-Mascuino_estadistica <- Prom_mas_t 
-Femenino_Ing.Sistemas <- Prom_fem_s 
-Masculino_Ing.Sistemas <- Prom_mas_s
-
-Tabla_datos <- t(matrix(cbind(Femenino_estadistica, Femenino_Ing.Sistemas, Mascuino_estadistica, Masculino_Ing.Sistemas )))
+Tabla_datos <- t(matrix(cbind(PromedioFemEstadis, PromedioFemSistema, PromedioMasEstadis, PromedioMasSistema, PromedioMasOtras)))
 
 Tabla_datos
-  colnames(Tabla_datos) <- c("Femenino:estadistica", "Femenino:Ing.Sistemas", "Masculino:estadistica", "Masculino:Ing.Sistemas")
+  colnames(Tabla_datos) <- c("Femenino:estadistica", "Femenino:Sistemas", "Masculino:estadistica", "Masculino:Sistemas", "Masculino:Otras")
 
   
 barplot(Tabla_datos,
@@ -160,52 +177,63 @@ barplot(Tabla_datos,
         ylim = c(0, 5), 
         ylab = "PAPA",
         main = "P.A.P.A con relación al género y a la carrera", 
-        cex.names = 0.8,
-        space = c(0.7, 0.7, 0.7, 0.7))
-
+        cex.names = 0.7,
+        space = c(1, 1, 1, 1, 1),
+        las = 1)
 ```
-## Pregunta: ¿en qué carrera están las mujeres y hombres con el mayor semestre?
+</div>
+
+<p>
+En general el promedio del PAPA de las carreras tomadas por género varian muy poco, todos estos promedios están en un valor que tiende a 4.<br>
+<br>
+La respuesta real a esta pregunta es que en promedio las mujeres que están en la carrera de Ingeniería de Sistemas son las que tienden a tener un mayor PAPA que el resto de generos y carreras</p>
+
+
+<h2>Pregunta: ¿en qué carrera están las mujeres y hombres con el mayor semestre?</h2>
+
+<p>Se espera que las mujeres y hombres de Ingenieria de Sistemas son los que están en los semestres más altos.</p>
 
 ```{r}
-dt <- encuesta[,c("Q01_Genero","Q03_Carrera", "Q04_Semestre" )] # Nueva base con las variables para este analisis
+baseCarGenSem <- encuesta[,c("Q01_Genero","Q03_Carrera", "Q04_Semestre" )] # Nueva base con las variables para este analisis
 
-#dt <- dt %>%
-#  filter(dt$Q03_Carrera == "3 : Estadística" | dt$Q03_Carrera == "2 : Ingeniería de sistemas e #informática" )
 
-dt$sem_int <- dt$Q04_Semestre
-dt$sem_int[dt$Q04_Semestre >= 1.0 & dt$Q04_Semestre < 2.0]  <- "[1, 2)"
-dt$sem_int[dt$Q04_Semestre >= 2.0 & dt$Q04_Semestre < 3.0]  <- "[2, 3)"
-dt$sem_int[dt$Q04_Semestre >= 3.0 & dt$Q04_Semestre < 4.0]  <- "[3, 4)"
-dt$sem_int[dt$Q04_Semestre >= 4.0 & dt$Q04_Semestre < 5.0]  <- "[4, 5)"
-dt$sem_int[dt$Q04_Semestre >= 5.0 & dt$Q04_Semestre < 6.0]  <- "[5, 6)"
-dt$sem_int[dt$Q04_Semestre >= 6.0 & dt$Q04_Semestre < 7.0]  <- "[6, 7)"
-dt$sem_int[dt$Q04_Semestre >= 7.0 & dt$Q04_Semestre < 8.0]  <- "[7, 8)"
-dt$sem_int[dt$Q04_Semestre >= 8.0 & dt$Q04_Semestre < 9.0]  <- "[8, 9)"
+baseCarGenSem$semestreIntervalo <- baseCarGenSem$Q04_Semestre
+baseCarGenSem$semestreIntervalo[baseCarGenSem$Q04_Semestre >= 1.0 & baseCarGenSem$Q04_Semestre < 2.0]  <- "[1, 2)"
+baseCarGenSem$semestreIntervalo[baseCarGenSem$Q04_Semestre >= 2.0 & baseCarGenSem$Q04_Semestre < 3.0]  <- "[2, 3)"
+baseCarGenSem$semestreIntervalo[baseCarGenSem$Q04_Semestre >= 3.0 & baseCarGenSem$Q04_Semestre < 4.0]  <- "[3, 4)"
+baseCarGenSem$semestreIntervalo[baseCarGenSem$Q04_Semestre >= 4.0 & baseCarGenSem$Q04_Semestre < 5.0]  <- "[4, 5)"
+baseCarGenSem$semestreIntervalo[baseCarGenSem$Q04_Semestre >= 5.0 & baseCarGenSem$Q04_Semestre < 6.0]  <- "[5, 6)"
+baseCarGenSem$semestreIntervalo[baseCarGenSem$Q04_Semestre >= 6.0 & baseCarGenSem$Q04_Semestre < 7.0]  <- "[6, 7)"
+baseCarGenSem$semestreIntervalo[baseCarGenSem$Q04_Semestre >= 7.0 & baseCarGenSem$Q04_Semestre < 8.0]  <- "[7, 8)"
+baseCarGenSem$semestreIntervalo[baseCarGenSem$Q04_Semestre >= 8.0 & baseCarGenSem$Q04_Semestre < 9.0]  <- "[8, 9)"
 
-dt$car_str <- dt$Q03_Carrera
-dt$car_str[dt$Q03_Carrera == "2 : Ingeniería de sistemas e informática"] <- "Ing.Sistemas"
-dt$car_str[dt$Q03_Carrera == "3 : Estadística"] <- "Estadística"
+baseCarGenSem$carreras <- baseCarGenSem$Q03_Carrera
+baseCarGenSem$carreras[baseCarGenSem$Q03_Carrera == "2 : Ingeniería de sistemas e informática"] <- "Ing.Sistemas"
+baseCarGenSem$carreras[baseCarGenSem$Q03_Carrera == "3 : Estadística"] <- "Estadística"
+baseCarGenSem$carreras[baseCarGenSem$Q03_Carrera == "1 : Matemáticas" | 
+             baseCarGenSem$Q03_Carrera == "6 : Ingeniería industrial" |
+             baseCarGenSem$Q03_Carrera == "5 : Ingeniería física" |
+             baseCarGenSem$Q03_Carrera == "4 : Ingeniería administrativa" |
+             baseCarGenSem$Q03_Carrera == "7 : Otra"] <- "Otras"
 
 ```
 
+<div align = "center">
+
 ```{r}
-table(dt$Q01_Genero, dt$sem_int)
-table(dt$Q03_Carrera, dt$sem_int)
-table(dt$Q03_Carrera, dt$sem_int,dt$Q01_Genero)
 
-dt_m <- dt %>%
-  filter(dt$Q01_Genero == "1 : Masculino")
-dt_f <- dt %>%
-  filter(dt$Q01_Genero == "2 : Femenino")
+tablaMasculina <- baseCarGenSem %>%
+  filter(baseCarGenSem$Q01_Genero == "1 : Masculino")
+tablaFemenina <- baseCarGenSem %>%
+  filter(baseCarGenSem$Q01_Genero == "2 : Femenino")
 
-a1 <- table(dt_m$car_str, dt_m$sem_int)
-a2 <- table(dt_f$car_str, dt_f$sem_int)
+
+masculinoCarSem <- table(tablaMasculina$carreras, tablaMasculina$semestreIntervalo)
+femeninoCarSem <- table(tablaFemenina$carreras, tablaFemenina$semestreIntervalo)
 
 palette(c("#469dff", "#46ff54", "#ff4646", "#ffcd46", "#46ffdd", "#a846ff", "#FFF798"))
-
-
  
-barplot(a2, 
+barplot(femeninoCarSem, 
         beside = TRUE, 
         las = 1, 
         ylim = c(0, 30), 
@@ -214,21 +242,32 @@ barplot(a2,
         legend = TRUE)
 
 
-barplot(a1, beside = TRUE, 
+barplot(masculinoCarSem, beside = TRUE, 
         las = 1, 
         main = "Masculino - semestre", 
         ylim = c(0, 30),
-        col = c(1, 2, 3, 4, 5, 6, 7),
+        col = c(1, 2, 3),
         legend = TRUE)
+ 
 
 ```
+</div>
 
-## Pregunta: ¿las personas de menor estrato que viven en el area metropolitana creen en más conspiraciones?
+<p>
+En los semestres más bajos que serían del 1 al 3 hay más concentración de estudiantes de la carrera de Estádistica, por otro lado en los semestres más altos hay más concentración de estudiantes de Ingeniería de Sistemas y otras carreras(Ingeniería Física, Ingeniería Administrativa, Ingeniería Industrial, Matemáticas y Otras).<br>
+<br>
+La respuesta real a esta pregunta es que con respecto al género masculino los estudiantes de otras carreras aunque en menor frecuencia son los que están en el semetre más alto, seguidos por los estdiantes de Ingeniería de Sistemas y algunos pocos de Estadística.
+
+</p>
+
+<h2>Pregunta: ¿En el área Metropolitana qué estrato tiende a creer más en las conspiraciones falsas?</h2>
+
+<p>Se espera que las personas de estratos bajos(Estratos 1, 2 y 3) en el área Metropolitana tienden a creer más en conspiraciones</p>
 
 ```{r}
 # filtro de las personas que viven en el area metropolitana
 
-per_metro <- encuesta %>%
+personarAreaMetro <- encuesta %>%
   filter(encuesta$Q09_EnAreaMetropolitana == 1)
 
 
@@ -245,41 +284,56 @@ per_metro <- encuesta %>%
 #Los efectos del cambio climático son naturales, y el escándalo se debe a conspiraciones de ambientalistas y de ciertos gremios económicos.
 
 # Las ráfagas solares causan los sismos en la tierra.
-```
+
 ## las personas que al menos crean en una de estas conspiraciones falsas será tomada como un "SI" de que si cree en conspiraciones falsas y las demas serán marcadas con "NO".
+
 
 ## Se crea una nueva variable para guardar estos datos
 
+personarAreaMetro$creenEnConspira[personarAreaMetro$Q15_Alunizaje == 1 | 
+                    personarAreaMetro$Q18_Vacunas == 1 | 
+                    personarAreaMetro$Q21_TierraHueca == 1|
+                    personarAreaMetro$Q22_alienigenas == 1 |
+                    personarAreaMetro$Q23_CambioClimatico == 1 |
+                    personarAreaMetro$Q20_RafagasSolares == 1] <- "SI"
+
+```
+
+<div align = "center">
+
 ```{r}
-per_metro$cree_sn[per_metro$Q15_Alunizaje == 1 | 
-                    per_metro$Q18_Vacunas == 1 | 
-                    per_metro$Q21_TierraHueca == 1|
-                    per_metro$Q22_alienigenas == 1 |
-                    per_metro$Q23_CambioClimatico == 1 |
-                    per_metro$Q20_RafagasSolares == 1] <- "SI"
 
+# Se filtran las personas que creen en conspiraciones falsas
+siCreen <- personarAreaMetro %>%
+  filter(personarAreaMetro$creenEnConspira == "SI")
 
+siCreen$Q10_Estrato[siCreen$Q10_Estrato == 2] <- "Estrato 2"
+siCreen$Q10_Estrato[siCreen$Q10_Estrato == 3] <- "Estrato 3"
+siCreen$Q10_Estrato[siCreen$Q10_Estrato == 4] <- "Estrato 4"
+siCreen$Q10_Estrato[siCreen$Q10_Estrato == 5] <- "Estrato 5"
 
-creen_cons <- per_metro %>%
-  filter
+# Se crea una tabla que guarda solo las personas que creen en conspiraciones y el estrato
 
-creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 2] <- "Estrato 2"
-creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 3] <- "Estrato 3"
-creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 4] <- "Estrato 4"
-creen_cons$Q10_Estrato[creen_cons$Q10_Estrato == 5] <- "Estrato 5"
+tablaAreaMetro <- table(siCreen$Q10_Estrato, siCreen$creenEnConspira)
 
-tabla_metro <- table(creen_cons$Q10_Estrato, creen_cons$cree_sn)
-
-barplot(tabla_metro, 
+barplot(tablaAreaMetro, 
         legend = TRUE, 
         ylim = c(0, 25),
         beside = TRUE ,
         col = c(1, 2, 3, 4),
         main = "Cantidad de personas que creen en conspiraciones falsas por estrato\n Area metropolitana",
         names = "")
-
-
+ 
 ```
+</div>
+
+
+<p>
+Las personas de estratos altos(Estratos 4, 5 y 6) tienen una muy baja frecuencia en la base de datos representando el 8.3% del total, además de que en la base de datos no hay estduantes de estrato 6. En la base de datos no hay estudiantes de estrato 1 que estén dentro del área Metropolitana, por lo tanto no estran en la gráfica.<br>
+<br>
+La respuesta real a esta pregunta es que efectivamente que las personas de estratos bajos son los que tienden a creer más en conspiraciones falsas.
+</p>
+
 ###########Jeison
 # ¿Buen icfes = buen PAPA?
 ```{r}
