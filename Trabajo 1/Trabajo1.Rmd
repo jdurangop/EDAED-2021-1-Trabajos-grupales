@@ -3,6 +3,7 @@ title: "Trabajo1"
 author: "Jeison Durango"
 date: "4/7/2021"
 output: html_document
+fig_width: 16
 ---
 
 ```{r setup, include=FALSE}
@@ -85,6 +86,11 @@ encuesta$Q25_PorcentArea[encuesta$Q25_PorcentArea == 0.1] <- 10
 encuesta$Q27_PorcentDivisor[encuesta$Q27_PorcentDivisor == 0.5] <- 50
 ```
 
+```{r}
+# Cálculo de la edad
+encuesta <- encuesta %>% 
+  mutate(Edad = as.numeric(as.Date("2021-06-30") - Q02_FechaNac)/365.25)
+```
 
 <h2>Pregunta: ¿quiénes tienen mejor papa por carrera y género?</h2>  
 
@@ -329,13 +335,17 @@ barplot(tablaAreaMetro,
 
 
 <p>
-Las personas de estratos altos(Estratos 4, 5 y 6) tienen una muy baja frecuencia en la base de datos representando el 8.3% del total, además de que en la base de datos no hay estduantes de estrato 6. En la base de datos no hay estudiantes de estrato 1 que estén dentro del área Metropolitana, por lo tanto no estran en la gráfica.<br>
-<br>
+Las personas de estratos altos(Estratos 4, 5 y 6) tienen una muy baja frecuencia en la base de datos representando el 8.3% del total, además de que en la base de datos no hay estduantes de estrato 6. En la base de datos no hay estudiantes de estrato 1 que estén dentro del área Metropolitana, por lo tanto no estran en la gráfica.
+</p>
+<p>
 La respuesta real a esta pregunta es que efectivamente que las personas de estratos bajos son los que tienden a creer más en conspiraciones falsas.
 </p>
 
-###########Jeison
-# ¿Buen icfes = buen PAPA?
+<h2>Pregunta: ¿Un buen ICFES significa un buen PAPA?</h2>
+
+<p>Se espera que las personas tengan un PAPA proporcional a su puntaje de ICFES, es decir, si obtuvieron un alto puntaje en el ICFES, su PAPA debe ser también alto. Para analizar esta hipótesis, se grafica los puntajes del ICFES junto con sus respectivos valores del PAPA, y se espera que se distribuyan al rededor de una línea recta con pendiente 5/500 (máximo PAPA sobre máximo ICFES, línea roja).</p>
+
+<div align = "center">
 ```{r}
 papaConIcfes <- encuesta %>%
   select(Q05_Saber11, Q08_PAPA)
@@ -344,25 +354,24 @@ papaConIcfesBueno <- papaConIcfes %>%
   filter(Q05_Saber11 >= 300 & Q08_PAPA >= 3.8)
 
 scatter.smooth(encuesta$Q05_Saber11, encuesta$Q08_PAPA,
-     pch=16, ylim=c(3,5),
+     pch=16, ylim=c(3,5), frame=FALSE,
      main="PAPA vs ICFES",
      xlab="Puntaje ICFES",
-     ylab="PAPA")
+     ylab="PAPA", col="blue")
 
-points(papaConIcfesBueno$Q05_Saber11, papaConIcfesBueno$Q08_PAPA,
-       pch=16, col="green")
+abline(0,5/500, col="red")
+```
+</div>
 
-abline(0,3.8/300, col="red")
-```
-```{r}
-buenPapaIcfes <-  nrow(encuesta %>% filter(Q05_Saber11 >= 300 & Q08_PAPA >= 3.8))
-buenPapaIcfes/nrow(encuesta %>% filter(!is.na(Q05_Saber11) & !is.na(Q08_PAPA)))
-```
-```{r}
-buenPapaIcfes2 <-  nrow(encuesta %>% filter(Q05_Saber11 <= 300 & Q08_PAPA >= 3.8))
-buenPapaIcfes2/nrow(encuesta %>% filter(!is.na(Q05_Saber11) & !is.na(Q08_PAPA)))
-```
-#Histórico puntaje ICFES, hombres vs mujeres
+<p>Al hacer el análisis, se nota que los puntos se distribuyen al rededor de la línea negra, por lo tanto se descarta la hipótesis de que un buen ICFES significa un buen PAPA.</p>
+
+<H2>Pregunta: ¿El desempeño de las mujeres en las ICFES es diferente al de los hombres?</h2>
+
+<p>Se quizo comparar el desempeño de las mujeres en las ICFES con respecto al de los hombres. Para esto, se muestra el promedio de los puntajes de las ICFES para cada género para cada año en el que se realizaron las pruebas.
+
+Nota: No existen datos sobre el puntaje de las ICFES de las mujeres para antes del 2013, por eso solo se muestran desde el 2013 al 2019.</p>
+
+<div align = "center">
 ```{r}
 puntajesIcfes <- encuesta %>% 
   mutate(añoIcfes = format(encuesta$Q07_FechaSaber11,"%Y")) %>%
@@ -375,8 +384,8 @@ puntajesMujeres <- puntajesIcfes %>% filter(Q01_Genero == "2 : Femenino") %>%
   group_by(añoIcfes) %>% summarise(puntajePromedio = mean(Q05_Saber11, na.rm=TRUE))
 
 plot(puntajesHombres$añoIcfes, puntajesHombres$puntajePromedio, type = "b",
-     frame = FALSE, pch = 19, col = "red", xlab = "Año de presentación", ylab = "Puntaje",
-     xlim=c(2013,2019), ylim=c(0,500))
+     frame = FALSE, pch = 19, main="Histórico ICFES", xlab = "Año de presentación", ylab = "Puntaje",
+     xlim=c(2013,2019), ylim=c(0,500), col = "red")
 
 lines(puntajesMujeres$añoIcfes, puntajesMujeres$puntajePromedio, pch = 19,
       col = "blue", type = "b", lty = 1)
@@ -384,32 +393,93 @@ lines(puntajesMujeres$añoIcfes, puntajesMujeres$puntajePromedio, pch = 19,
 legend("topleft", legend=c("Hombres", "Mujeres"),
        col=c("red", "blue"), lty = 1:1, cex=0.8)
 ```
+</div>
+
+<p>Como se ve en la gráfica, no se nota una diferencia significativa en el puntaje obtenido en las ICFES para cada género.</p>
+
+<H2>Pregunta: ¿Hay alguna diferencia entre las personas que tienen instalado los softwares R y RStudio según su carrera?</h2>
+<p>Hipótesis 1: Se espera que las personas de estadística que tienen ambos software instalados sean muchas más que las que no, debido a que son programas que suelen usar regularmente.
+Hipótesis 2: Se espera que el porcentaje de personas de estadística que sí tienen instalados ambos programas sea mucho mayor al de los de ingeniería de sistemas, teniendo en cuenta que los de esta carrera no los usan muy seguido.</p>
+
+<div align = "center">
 ```{r}
 instalaronR_Rstudio <- encuesta %>%
   filter(Q11_R == 1 & Q12_RStudio == 1) %>%
-  select(Q03_Carrera) %>% count(Q03_Carrera)
+  select(Q03_Carrera)
+
+instalaronR_Rstudio$Q03_Carrera[
+  instalaronR_Rstudio$Q03_Carrera != "2 : Ingeniería de sistemas e informática"
+  & instalaronR_Rstudio$Q03_Carrera != "3 : Estadística"] <- "Otras" 
+
+instalaronR_Rstudio <- instalaronR_Rstudio %>% count(Q03_Carrera)
 
 noInstalaronR_Rstudio <- encuesta %>%
   filter(Q11_R == 0 | Q12_RStudio == 0) %>%
   select(Q03_Carrera) %>% count(Q03_Carrera)
-
-noInstalaronR_Rstudio
+noInstalaronR_Rstudio[3,] <- c("Otras", 0)
 ```
 
 ```{r}
+tablaR_Rstudio <- t(as.matrix(data.frame(instalaronR_Rstudio$n, as.numeric(noInstalaronR_Rstudio$n))))
+
+barrasRStudio <- barplot(tablaR_Rstudio, beside=TRUE,
+        main="Carreras que instalaron R y RStudio",
+        col=c("blue", "red"),
+        ylim = c(0,60),
+        legend = c("R y RStudio instalado", "R y RStudio no instalado"),
+        names = c("Ing. Sistemas", "Estadística", "Otras"),
+        ylab = "Personas")
+
+text(barrasRStudio, tablaR_Rstudio +3 , paste(tablaR_Rstudio))
+```
+</div>
+
+<p>Porcentaje de personas de estadística que tienen ambos programas instalados: 81.48%
+
+Con un porcentaje tan alto, se afirma la hipótesis 1: la mayoría de las personas de estadística tienen ambos programas instalados.
+</p>
+<p>
+Porcentaje de personas de ingeniería de sistemas que tienen ambos programas instalados: 93.31%
+
+Debido a que el porcentaje de las personas de ingeniería de sistemas es superior al de los de estadística, se rechaza la hipótesis 2.
+</p>
+
+<h2>Pregunta: ¿Los hombres que creen que los alienígenas visitaron las civilizaciones antiguias son más jóvenes que los que no?</h2>
+
+<p>Se espera que los hombres jóvenes crean más en este tipo de conspiraciones a comparación de los hombres de mayor edad.</p>
+
+<div align = "center">
+```{r}
 hombresCreenAlienigenas <- encuesta %>%
-  filter(Q22_alienigenas == 1 & Q01_Genero == "1 : Masculino") %>%
-  select(edad)
+  filter(Q22_alienigenas == 1 & Q01_Genero == "1 : Masculino" & Edad <= 32) %>%
+  select(Edad)
 
 hombresNoCreenAlienigenas <- encuesta %>%
-  filter(Q22_alienigenas == 0 & Q01_Genero == "1 : Masculino") %>%
-  select(edad)
+  filter(Q22_alienigenas == 0 & Q01_Genero == "1 : Masculino" & Edad <= 32) %>%
+  select(Edad)
+
+op <- par(no.readonly = TRUE)
+par(mfrow = c(1, 2))
+
+
+with(hombresCreenAlienigenas,
+     plot(Edad, frame = FALSE, pch = 19, col="blue",
+          ylim = c(15,35), xlim = c(0,25), xlab="",
+          main = "Edad de los hombres que\ncreen en los alienígenas"))
+promEdadHombresAlien = mean(hombresCreenAlienigenas$Edad, na.rm=TRUE)
+abline(h = promEdadHombresAlien, col="red")
+
+with(hombresNoCreenAlienigenas,
+     plot(Edad, frame = FALSE, pch = 19, col="blue",
+          ylim = c(15,35), xlim = c(0,50), xlab="",
+          main = "Edad de los hombres que\nno creen en los alienígenas"))
+promEdadHombresNoAlien = mean(hombresNoCreenAlienigenas$Edad, na.rm=TRUE)
+abline(h = promEdadHombresNoAlien, col="red")
+par(op)
 ```
+</div>
 
-
-
-
-###########Jeison
+<p>Se observa que el promedio de la edad de los hombres que creen en esta conspiración es de `r round(promEdadHombresAlien)`, mientras que el de los que no es de `r round(promEdadHombresNoAlien)`. Hay una leve diferencia en estos promedios, pero no es suficiente para que la hipótesis sea cierta.</p>
 
 
 
