@@ -477,14 +477,14 @@ with(hombresCreenAlienigenas,
      plot(Edad, frame = FALSE, pch = 19, col="blue",
           ylim = c(15,35), xlim = c(0,25), xlab="",
           main = "Edad de los hombres que\ncreen en los alienígenas"))
-promEdadHombresAlien = mean(hombresCreenAlienigenas$Edad, na.rm=TRUE)
+promEdadHombresAlien <- mean(hombresCreenAlienigenas$Edad, na.rm=TRUE)
 abline(h = promEdadHombresAlien, col="red")
 
 with(hombresNoCreenAlienigenas,
      plot(Edad, frame = FALSE, pch = 19, col="blue",
           ylim = c(15,35), xlim = c(0,50), xlab="",
           main = "Edad de los hombres que\nno creen en los alienígenas"))
-promEdadHombresNoAlien = mean(hombresNoCreenAlienigenas$Edad, na.rm=TRUE)
+promEdadHombresNoAlien <- mean(hombresNoCreenAlienigenas$Edad, na.rm=TRUE)
 abline(h = promEdadHombresNoAlien, col="red")
 par(op)
 ```
@@ -493,7 +493,29 @@ par(op)
 <p>Se observa que el promedio de la edad de los hombres que creen en esta conspiración es de `r round(promEdadHombresAlien)`, mientras que el de los que no es de `r round(promEdadHombresNoAlien)`. Hay una leve diferencia en estos promedios, pero no es suficiente para que la hipótesis sea cierta.</p>
 
 
+<h2>Pregunta: ¿Las personas que creen que las vacunas son efectivas confían en que sus compañeros tienen mejor desempeño?</h2>
+<p>Se espera que las personas que creen que las vacunas funcionan, tengan más fe en que sus compañeros sean capaces de responder correctamente preguntas de geometría.</p>
 
+<div align = "center">
+```{r}
+porcentajePersonasCreenVacunas <- encuesta %>%
+  filter(Q18_Vacunas == 0) %>% select(Q25_PorcentArea)
+promedioPorcentajeCreenVacunas <- mean(porcentajePersonasCreenVacunas$Q25_PorcentArea, na.rm=TRUE)
+
+porcentajePersonasNoCreenVacunas <- encuesta %>%
+  filter(Q18_Vacunas == 1) %>% select(Q25_PorcentArea)
+promedioPorcentajeNoCreenVacunas <- mean(porcentajePersonasNoCreenVacunas$Q25_PorcentArea, na.rm=TRUE)
+
+
+barplot(c(promedioPorcentajeCreenVacunas, promedioPorcentajeNoCreenVacunas),
+        width=0.5,
+        main="Promedio porcentaje área con respecto a si\nse cree o no en las vacunas",
+        col=c("blue","red"),
+        ylim=c(0,60),
+        names=c("Personas que creen\nen las vacunas", "Personas que no creen\nen las vacunas"))
+```
+</div>
+<p>Al analizar los resultados, se observa que no existe diferencia significativa entre los promedios de los porcenjes de acierto con respecto a si las personas creen en las vacunas o no.</p>
 
 
 
