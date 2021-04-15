@@ -1,9 +1,8 @@
 ---
-title: "Trabajo1"
-author: "Jeison Durango"
-date: "4/7/2021"
+title: "Estadística descriptiva y análisis exploratiorio de datos 2021-1\n\nTrabajo grupal 1"
+author: "Jeison Durango Cc 1214745706\n\nJoelle Rios Cc 1064978739\n\nDaniela Guardia Cuervo Cc 1007675467\n\nIsa Daut Mercado Cc 1193530926"
+date: "4/14/2021"
 output: html_document
-fig_width: 16
 ---
 
 ```{r setup, include=FALSE}
