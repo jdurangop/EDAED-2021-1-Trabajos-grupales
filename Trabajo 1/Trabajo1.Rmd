@@ -186,6 +186,8 @@ barplot(Tabla_datos,
         cex.names = 0.7,
         space = c(1, 1, 1, 1, 1),
         las = 1)
+
+summary(Tabla_datos)
 ```
 </div>
 
@@ -254,8 +256,16 @@ barplot(masculinoCarSem, beside = TRUE,
         ylim = c(0, 30),
         col = c(1, 2, 3),
         legend = TRUE)
- 
 
+print("Cantidad de datos del género femenino: ")
+sum(femeninoCarSem)
+print("Cantidad de datos del género masculino")
+sum(masculinoCarSem)
+
+print("Promedio de los semestres del género femenino: ")
+mean(tablaFemenina$Q04_Semestre)
+print("Promedio de los semestres del género masculino: ")
+mean(tablaMasculina$Q04_Semestre)
 ```
 </div>
 
@@ -313,10 +323,6 @@ personarAreaMetro$creenEnConspira[personarAreaMetro$Q15_Alunizaje == 1 |
 siCreen <- personarAreaMetro %>%
   filter(personarAreaMetro$creenEnConspira == "SI")
 
-siCreen$Q10_Estrato[siCreen$Q10_Estrato == 2] <- "Estrato 2"
-siCreen$Q10_Estrato[siCreen$Q10_Estrato == 3] <- "Estrato 3"
-siCreen$Q10_Estrato[siCreen$Q10_Estrato == 4] <- "Estrato 4"
-siCreen$Q10_Estrato[siCreen$Q10_Estrato == 5] <- "Estrato 5"
 
 # Se crea una tabla que guarda solo las personas que creen en conspiraciones y el estrato
 
@@ -328,8 +334,13 @@ barplot(tablaAreaMetro,
         beside = TRUE ,
         col = c(1, 2, 3, 4),
         main = "Cantidad de personas que creen en conspiraciones falsas por estrato\n Area metropolitana",
-        names = "")
- 
+        names = "",
+        xlab = "Estratos")
+
+summary(siCreen$Q10_Estrato)
+
+print("Cantidad de personas que creen en al menos una conspiración falsa:" )
+nrow(siCreen)
 ```
 </div>
 
