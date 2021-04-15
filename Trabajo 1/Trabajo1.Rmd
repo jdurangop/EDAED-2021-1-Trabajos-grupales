@@ -348,9 +348,22 @@ La respuesta real a esta pregunta es que efectivamente que las personas de estra
 ###########Jeison
 # ¿Buen icfes = buen PAPA?
 ```{r}
-plot(encuesta$Q05_Saber11, encuesta$Q08_PAPA, ylim=c(3,5))
-abline(v=300, col="blue")
-abline(h=3.8, col="red")
+papaConIcfes <- encuesta %>%
+  select(Q05_Saber11, Q08_PAPA)
+
+papaConIcfesBueno <- papaConIcfes %>%
+  filter(Q05_Saber11 >= 300 & Q08_PAPA >= 3.8)
+
+scatter.smooth(encuesta$Q05_Saber11, encuesta$Q08_PAPA,
+     pch=16, ylim=c(3,5),
+     main="PAPA vs ICFES",
+     xlab="Puntaje ICFES",
+     ylab="PAPA")
+
+points(papaConIcfesBueno$Q05_Saber11, papaConIcfesBueno$Q08_PAPA,
+       pch=16, col="green")
+
+abline(0,3.8/300, col="red")
 ```
 ```{r}
 buenPapaIcfes <-  nrow(encuesta %>% filter(Q05_Saber11 >= 300 & Q08_PAPA >= 3.8))
@@ -382,6 +395,31 @@ lines(puntajesMujeres$añoIcfes, puntajesMujeres$puntajePromedio, pch = 19,
 legend("topleft", legend=c("Hombres", "Mujeres"),
        col=c("red", "blue"), lty = 1:1, cex=0.8)
 ```
+```{r}
+instalaronR_Rstudio <- encuesta %>%
+  filter(Q11_R == 1 & Q12_RStudio == 1) %>%
+  select(Q03_Carrera) %>% count(Q03_Carrera)
+
+noInstalaronR_Rstudio <- encuesta %>%
+  filter(Q11_R == 0 | Q12_RStudio == 0) %>%
+  select(Q03_Carrera) %>% count(Q03_Carrera)
+
+noInstalaronR_Rstudio
+```
+
+```{r}
+hombresCreenAlienigenas <- encuesta %>%
+  filter(Q22_alienigenas == 1 & Q01_Genero == "1 : Masculino") %>%
+  select(edad)
+
+hombresNoCreenAlienigenas <- encuesta %>%
+  filter(Q22_alienigenas == 0 & Q01_Genero == "1 : Masculino") %>%
+  select(edad)
+```
+
+
+
+
 ###########Jeison
 
 
