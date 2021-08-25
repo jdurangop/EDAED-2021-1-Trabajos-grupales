@@ -1,0 +1,13 @@
+---
+title: "Estadística descriptiva y análisis exploratiorio de datos 2021-1\n\nTrabajo grupal 2"
+author: "Jeison Durango Cc 1214745706\n\nJoelle Rios Cc 1064978739\n\nDaniela Guardia Cuervo Cc 1007675467"
+date: "2021/08/30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
