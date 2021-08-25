@@ -12,9 +12,16 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 ```{r}
+library(readxl)
 library(tidyverse)
 library(visdat)
 library(dlookr)
+library(openxlsx)
+library(lubridate)
+library(ggpubr)
+library(kableExtra)
+library(hrbrthemes)
+library(viridis)
 ```
 
 ```{r}
@@ -22,11 +29,50 @@ library(dlookr)
 bdInternet <- read.csv("BD_Completa.csv", encoding = "UTF-8")
 
 bdInternet <- bdInternet %>%
-  mutate(TEST_DATE = as.Date(TEST_DATE, "%m/%d/%Y %H:%M"))
+  mutate(TEST_DATE = as.POSIXct(strptime(TEST_DATE, "%m/%d/%Y %H:%M:%S")))
+
+bdInternet <- bdInternet %>%
+  mutate(TEST_HOUR = ifelse(format(TEST_DATE, format = "%H") %in% c("08", "09"), 9,
+                            ifelse(format(TEST_DATE, format = "%H") %in% c("13", "14"), 14, 19)))
 ```
 
 ```{r}
-get_class(bdInternet)
+tempLatencia <- bdInternet %>%
+  select(TEMPERATURE, LATENCY_MS)
+
+plot_correlate(tempLatencia)
 ```
+
+```{r}
+tempLatencia %>%
+  group_by(LATENCY_MS) %>%
+  summarise(media = mean(TEMPERATURE)) %>%
+  plot(type = "l")
+```
+```{r}
+propVelocidades <- bdInternet %>%
+  mutate(PROPORTION = DOWNLOAD_INDICATOR/UPLOAD_INDICATOR) %>%
+  select(TEST_HOUR, PROPORTION)
+```
+
+```{r}
+propVelocidades %>%
+  filter(TEST_HOUR == 9) %>%
+  ggplot(aes(x=TEST_HOUR,
+             y=PROPORTION,
+             fill=TEST_HOUR)) +
+    geom_boxplot() +
+    scale_fill_viridis(discrete = F, alpha=0.6, option="A") +
+    theme_ipsum() +
+    theme(#legend.position="none",
+          plot.title = element_text(size=11),
+          axis.text.x = element_text(angle = 50, vjust = 0.5, hjust=1)) +
+    ggtitle("Diagrama de cajas y bigotes. Tiempo de recuperación menor a 30 días.") +
+    xlab("") + ylab("Tiempo de recuperación (días)")
+```
+
+
+
+
 
 
