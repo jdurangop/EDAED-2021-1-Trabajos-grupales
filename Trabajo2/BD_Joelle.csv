@@ -1,0 +1,70 @@
+IP_ADDRESS,TEST_DATE,TIME_ZONE,DOWNLOAD_MEGABITS,UPLOAD_MEGABITS,LATENCY_MS,SERVER_NAME,DISTANCE_MILES,CONNECTION_MODE,SERVER_COUNT,WEATHER,TEMPERATURE,CONNECTED_DEVICES,CONNECTION_TYPE
+181.140.97.128,03/08/2021 19:07:00,GMT,40.71,2.6,166,Madrid,5000,multi,1,muy nublado,19,8,wifi
+181.140.97.128,03/08/2021 19:04:00,GMT,63.29,8.36,21,Bogotá,150,multi,1,muy nublado,19,8,wifi
+181.140.97.128,03/08/2021 19:02:00,GMT,61.39,7.4,26,Medellin,0,multi,1,muy nublado,19,8,wifi
+181.140.97.128,03/08/2021 14:07:00,GMT,40.27,2.77,166,Madrid,5000,multi,1,lluvia,20,8,wifi
+181.140.97.128,03/08/2021 14:04:00,GMT,46.03,8.42,22,Bogotá,150,multi,1,lluvia,20,8,wifi
+181.140.97.128,03/08/2021 14:01:00,GMT,63.47,8.09,25,Medellin,0,multi,1,lluvia,20,8,wifi
+181.140.97.128,03/08/2021 09:07:00,GMT,13.53,1.02,171,Madrid,5000,multi,1,parcialmente nublado,23,9,wifi
+181.140.97.128,03/08/2021 09:05:00,GMT,59.18,8.25,19,Bogotá,150,multi,1,parcialmente nublado,23,9,wifi
+181.140.97.128,03/08/2021 09:00:00,GMT,61.76,7.76,25,Medellin,0,multi,1,parcialmente nublado,23,9,wifi
+181.140.97.128,02/08/2021 19:04:00,GMT,59.47,2.55,167,Madrid,5000,multi,1,nublado,19,8,wifi
+181.140.97.128,02/08/2021 19:02:00,GMT,63.15,7.48,23,Bogotá,150,multi,1,nublado,19,8,wifi
+181.140.97.128,02/08/2021 19:00:00,GMT,63.44,9.11,13,Medellín,0,multi,1,nublado,19,8,wifi
+181.140.97.128,02/08/2021 14:07:00,GMT,37.01,2.24,161,Madrid,5000,multi,4,parcialmente nublado,25,8,wifi
+181.140.97.128,02/08/2021 14:05:00,GMT,60.46,8.14,20,Bogotá,150,multi,1,parcialmente nublado,25,8,wifi
+181.140.97.128,02/08/2021 14:01:00,GMT,63.34,7.83,28,Medellin,0,multi,1,parcialmente nublado,25,8,wifi
+181.140.97.128,02/08/2021 09:08:00,GMT,35.04,2.24,164,Madrid,5000,multi,1,parcialmente nublado,23,9,wifi
+181.140.97.128,02/08/2021 09:06:00,GMT,60.64,8.04,20,Bogotá,150,multi,1,parcialmente nublado,23,9,wifi
+181.140.97.128,02/08/2021 09:03:00,GMT,61.06,7.34,27,Medellin,0,multi,1,parcialmente nublado,23,9,wifi
+181.140.97.128,01/08/2021 19:07:00,GMT,52.46,2.41,174,Madrid,5000,multi,1,nublado,20,8,wifi
+181.140.97.128,01/08/2021 19:05:00,GMT,64.92,7.42,22,Bogotá,150,multi,1,nublado,20,8,wifi
+181.140.97.128,01/08/2021 19:02:00,GMT,62.25,7.36,28,Medellin,0,multi,1,nublado,20,8,wifi
+181.140.97.128,01/08/2021 14:09:00,GMT,50.17,8.21,21,Bogotá,150,multi,1,parcialmente nublado,24,8,wifi
+181.140.97.128,01/08/2021 14:07:00,GMT,63.18,7.98,25,Medellin,0,multi,1,parcialmente nublado,24,8,wifi
+181.140.97.128,01/08/2021 14:03:00,GMT,51.91,2.57,161,Madrid,5000,multi,1,parcialmente nublado,24,8,wifi
+181.140.97.128,01/08/2021 09:09:00,GMT,4.79,4.29,24,Bogotá,150,multi,1,soleado,25,9,wifi
+181.140.97.128,01/08/2021 09:05:00,GMT,5.1,4.78,22,Bogotá,150,multi,1,soleado,25,9,wifi
+181.140.97.128,01/08/2021 09:02:00,GMT,21.64,7.45,25,Medellin,0,multi,1,soleado,25,9,wifi
+181.140.97.128,07/31/2021 19:06,GMT,22.31,2.5,170,Madrid,5000,multi,1,muy nublado,20,9,wifi
+181.140.97.128,07/31/2021 19:04,GMT,21.5,7.56,23,Bogotá,150,multi,1,muy nublado,20,9,wifi
+181.140.97.128,07/31/2021 19:00,GMT,33.21,7.41,25,Medellin,0,multi,1,muy nublado,20,9,wifi
+181.140.97.128,07/31/2021 14:07,GMT,45.18,2.62,158,Madrid,5000,multi,1,parcialmente nublado,26,9,wifi
+181.140.97.128,07/31/2021 14:05,GMT,61.5,8.32,20,Bogotá,150,multi,1,parcialmente nublado,26,9,wifi
+181.140.97.128,07/31/2021 14:01,GMT,63.01,7.26,26,Medellin,0,multi,1,parcialmente nublado,26,9,wifi
+181.140.97.128,07/31/2021 9:07,GMT,2.95,1.86,156,Madrid,5000,multi,1,parcialmente nublado,24,9,wifi
+181.140.97.128,07/31/2021 9:04,GMT,63.3,8.22,22,Bogotá,150,multi,1,parcialmente nublado,24,9,wifi
+181.140.97.128,07/31/2021 9:00,GMT,63.14,7.15,27,Medellin,0,multi,1,parcialmente nublado,24,9,wifi
+181.140.97.128,07/30/2021 19:07,GMT,42.6,2.65,159,Madrid,5000,multi,1,muy nublado,21,9,wifi
+181.140.97.128,07/30/2021 19:04,GMT,60.17,8.21,22,Bogotá,150,multi,1,muy nublado,21,9,wifi
+181.140.97.128,07/30/2021 19:02,GMT,48.76,7.66,26,Medellin,0,multi,1,muy nublado,21,9,wifi
+181.140.97.128,07/30/2021 14:06,GMT,18.9,2.7,167,Madrid,5000,multi,1,muy nublado,27,8,wifi
+181.140.97.128,07/30/2021 14:03,GMT,46,7.86,21,Bogotá,150,multi,1,muy nublado,27,8,wifi
+181.140.97.128,07/30/2021 14:00,GMT,45.82,7.74,26,Medellin,0,multi,1,muy nublado,27,8,wifi
+181.140.97.128,07/30/2021 9:05,GMT,38.05,2.67,157,Madrid,5000,multi,1,parcialmente nublado,23,8,wifi
+181.140.97.128,07/30/2021 9:02,GMT,60.53,7.92,21,Bogotá,150,multi,1,parcialmente nublado,23,8,wifi
+181.140.97.128,07/30/2021 9:00,GMT,58.04,5.25,28,Medellin,0,multi,1,parcialmente nublado,23,8,wifi
+181.140.97.128,07/29/2021 19:06,GMT,30.53,2.68,155,Madrid,5000,multi,1,lluvia,20,9,wifi
+181.140.97.128,07/29/2021 19:04,GMT,62.56,7.62,21,Bogotá,150,multi,1,lluvia,20,9,wifi
+181.140.97.128,07/29/2021 19:01,GMT,62.08,7.75,25,Medellin,0,multi,1,lluvia,20,9,wifi
+181.140.97.128,07/29/2021 14:07,GMT,36.41,2.79,161,Madrid,5000,multi,1,parcialmente nublado,26,8,wifi
+181.140.97.128,07/29/2021 14:04,GMT,62.29,7.82,23,Bogotá,150,multi,1,parcialmente nublado,26,8,wifi
+181.140.97.128,07/29/2021 14:01,GMT,61.97,8.34,12,Medellín,0,multi,4,parcialmente nublado,26,8,wifi
+181.140.97.128,07/29/2021 9:07,GMT,34.68,2.69,159,Madrid,5000,multi,1,parcialmente nublado,24,8,wifi
+181.140.97.128,07/29/2021 9:04,GMT,62.99,7.91,23,Bogotá,150,multi,1,parcialmente nublado,24,8,wifi
+181.140.97.128,07/29/2021 9:00,GMT,63.03,7.65,27,Medellin,0,multi,1,parcialmente nublado,24,8,wifi
+181.140.97.128,07/28/2021 19:07,GMT,40.94,1.75,163,Madrid,5000,multi,1,muy nublado,22,9,wifi
+181.140.97.128,07/28/2021 19:03,GMT,55.56,7.57,20,Bogotá,150,multi,1,muy nublado,22,9,wifi
+181.140.97.128,07/28/2021 19:00,GMT,51.05,7.01,28,Medellin,0,multi,1,muy nublado,22,9,wifi
+181.140.97.128,07/28/2021 14:07,GMT,18.07,2.53,158,Madrid,5000,multi,1,parcialmente nublado,27,8,wifi
+181.140.97.128,07/28/2021 14:04,GMT,35.91,7.84,23,Bogotá,150,multi,1,parcialmente nublado,27,8,wifi
+181.140.97.128,07/28/2021 14:00,GMT,37.71,7.66,30,Medellin,0,multi,1,parcialmente nublado,27,8,wifi
+181.140.97.128,07/28/2021 9:09,GMT,18.78,2.67,162,Madrid,5000,multi,1,muy nublado,23,8,wifi
+181.140.97.128,07/28/2021 9:04,GMT,41.97,7.05,26,Bogotá,150,multi,1,muy nublado,23,8,wifi
+181.140.97.128,07/28/2021 9:00,GMT,30.51,5.84,31,Medellin,0,multi,1,muy nublado,23,8,wifi
+181.140.97.128,07/27/2021 19:08,GMT,53.9,2.83,157,Madrid,5000,multi,1,nublado,21,9,wifi
+181.140.97.128,07/27/2021 19:05,GMT,62.51,8.11,23,Bogotá,150,multi,1,nublado,21,9,wifi
+181.140.97.128,07/27/2021 19:00,GMT,61.75,8.09,12,Medellín,0,multi,4,nublado,21,9,wifi
+181.140.97.128,07/27/2021 14:07,GMT,62.14,9.97,11,Medellín,0,multi,4,nublado,25,8,wifi
+181.140.97.128,07/27/2021 14:04,GMT,46.63,2.8,156,Madrid,5000,multi,1,nublado,25,8,wifi
+181.140.97.128,07/27/2021 14:00,GMT,61.94,8.3,21,Bogotá,150,multi,1,nublado,25,8,wifi
