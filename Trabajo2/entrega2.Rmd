@@ -11,3 +11,22 @@ knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE)
 ```
 
+```{r}
+library(tidyverse)
+library(visdat)
+library(dlookr)
+```
+
+```{r}
+## Lectura de una base de datos tipo ".csv"
+bdInternet <- read.csv("BD_Completa.csv", encoding = "UTF-8")
+
+bdInternet <- bdInternet %>%
+  mutate(TEST_DATE = as.Date(TEST_DATE, "%m/%d/%Y %H:%M"))
+```
+
+```{r}
+get_class(bdInternet)
+```
+
+
