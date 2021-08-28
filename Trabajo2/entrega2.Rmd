@@ -36,6 +36,12 @@ bdInternet <- bdInternet %>%
 bdInternet <- bdInternet %>%
   mutate(TEST_HOUR = ifelse(format(TEST_DATE, format = "%H") %in% c("08", "09"), 9,
                             ifelse(format(TEST_DATE, format = "%H") %in% c("13", "14"), 14, 19)))
+
+bdInternet$WEATHER[bdInternet$WEATHER %in% c("miuy nublado","muy nubblado")] <- "muy nublado"
+bdInternet$WEATHER[bdInternet$WEATHER == "nublado "] <- "nublado"
+bdInternet$SERVER_NAME[bdInternet$SERVER_NAME == "Medellin"] <- "Medellín"
+
+bdInternet$DOWNLOAD_INDICATOR[bdInternet$DOWNLOAD_INDICATOR >= 3] <- NA
 ```
 
 ```{r}
@@ -47,10 +53,15 @@ plot_correlate(tempLatencia)
 
 ```{r}
 tempLatencia %>%
-  group_by(LATENCY_MS) %>%
-  summarise(media = mean(TEMPERATURE)) %>%
-  plot(type = "l")
+  group_by(TEMPERATURE) %>%
+  summarise(mediaLatencia = mean(LATENCY_MS)) %>%
+  plot()
 ```
+
+```{r}
+bdInternet %>% select(SERVER_NAME, SERVER_COUNT) %>% count(SERVER_NAME, SERVER_COUNT)
+```
+
 ```{r}
 propVelocidades <- bdInternet %>%
   group_by(DATE_, TEST_HOUR) %>%
@@ -112,9 +123,13 @@ filter(propVelocidades, TEST_HOUR == 19) %>%
   kbl() %>%  kable_styling()
 ```
 ```{r}
+!is.na(dbProviders$DOWNLOAD_INDICATOR)
+```
+
+```{r}
 dbProviders <- bdInternet %>%
   group_by(PROVIDER, DATE_) %>%
-  summarise(promDown = mean(DOWNLOAD_INDICATOR),
+  summarise(promDown = mean(DOWNLOAD_INDICATOR, na.rm=TRUE),
             promUp = mean(UPLOAD_INDICATOR)) %>%
   ungroup()
 
@@ -159,15 +174,13 @@ legend("topleft", legend=c("Tigo", "Movistar"),
 ```{r}
 bdInternet %>%
   group_by(PROVIDER) %>%
-  summarise(promDown = mean(DOWNLOAD_INDICATOR),
-            desvDown = sd(DOWNLOAD_INDICATOR),
-            promUp = mean(UPLOAD_INDICATOR),
-            desvUp = sd(UPLOAD_INDICATOR))
+  summarise(promDown = mean(DOWNLOAD_INDICATOR, na.rm=TRUE),
+            desvDown = sd(DOWNLOAD_INDICATOR, na.rm=TRUE),
+            promUp = mean(UPLOAD_INDICATOR, na.rm=TRUE),
+            desvUp = sd(UPLOAD_INDICATOR, na.rm=TRUE))
 ```
 ```{r}
-plot_correlate(select(bdInternet, LATENCY_MS, DISTANCE_MILES))
-plot_correlate(select(bdInternet, DOWNLOAD_INDICATOR, DISTANCE_MILES))
-plot_correlate(select(bdInternet, UPLOAD_INDICATOR, DISTANCE_MILES))
+plot_correlate(select(bdInternet, LATENCY_MS, DISTANCE_MILES, DOWNLOAD_INDICATOR, UPLOAD_INDICATOR))
 ```
 
 
