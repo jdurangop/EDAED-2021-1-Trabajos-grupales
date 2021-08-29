@@ -185,6 +185,52 @@ plot_correlate(select(bdInternet, LATENCY_MS, DISTANCE_MILES, DOWNLOAD_INDICATOR
 
 
 
+```{r}
+
+#### **¿Hay diferencia entre cable y wifi con respecto al clima?**
+
+base1 <- bdInternet
+
+
+```
+
+```{r}
+ 
+
+ggplot(base1, aes(x = WEATHER, y = DOWNLOAD_INDICATOR)) +
+  geom_bar(position = "dodge",
+           stat = "summary",
+           fun = "mean", aes(fill = WEATHER)) +
+  facet_grid(CONNECTION_TYPE~., scales = 'free') +
+   theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  xlab("Clima") +
+  ylab("Velocidad promedio de descarga") +
+  ylim(0, 1.2) +
+  ggtitle("Distribución de promedios de velocidad de descarga\n segun el clima y el tipo de conexión.")
+
+ggplot(base1, aes(x = WEATHER, y = UPLOAD_INDICATOR)) +
+  geom_bar(position = "dodge",
+           stat = "summary",
+           fun = "mean", aes(fill = WEATHER)) +
+  facet_grid(CONNECTION_TYPE~., scales = 'free') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  xlab("Clima") +
+  ylab("Velocidad promedio de carga") +
+  ylim(0, 2.0) +
+  ggtitle("Distribución de promedios de velocidad de carga\n segun el clima y el tipo de conexión.")
+
+
+
+## analisis
+
+#El clima afecta la velocidad de subida y de descarga dependiendo la conexión de cable de red o wifi.
+#La condición meteorológica que más afecta el clima a la velocidad  carga y descarga del internet tanto para la conexión de cable de red o wifi es la lluvia débil y  cuando es soleado son los  más efectos negativos creando interferencias puede tener sobre nuestro internet   puede ser por el factores. pocos datos que se tiene en las mediciones debido a la ola invernal que atraviesa nuestro departamento de Antioquia, la intensidad de la señal y mucho más con el sobrecalentamiento del equipo en días soleados y las lluvias débiles absorben esta frecuencia de radio y por tanto bloquean parcialmente  esta señal creando interferencias en la señal  contrario a las tormentas eléctricas que un principio se pensó que el afectaba la velocidad de descarga resulto una velocidad superior a los demás climas seguido por parcialmente nublado los demás climas tienen una velocidad constantes. 
+#La respuesta es definitivamente es no hay diferencia entre según su conexión de cable de red o wifi lo que hace que la conexión a internet es el clima.
+
+```
+
 
 
 
