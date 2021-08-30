@@ -123,10 +123,6 @@ filter(propVelocidades, TEST_HOUR == 19) %>%
   kbl() %>%  kable_styling()
 ```
 ```{r}
-!is.na(dbProviders$DOWNLOAD_INDICATOR)
-```
-
-```{r}
 dbProviders <- bdInternet %>%
   group_by(PROVIDER, DATE_) %>%
   summarise(promDown = mean(DOWNLOAD_INDICATOR, na.rm=TRUE),
@@ -138,6 +134,7 @@ prov1 <- dbProviders %>%
 prov2 <- dbProviders %>%
   filter(PROVIDER == "Movistar")
 ```
+
 ```{r}
 plot(prov1$DATE_, prov1$promDown, type = "l",
      frame = FALSE,
@@ -153,6 +150,8 @@ lines(prov2$DATE_, prov2$promDown,
 
 legend("topleft", legend=c("Tigo", "Movistar"),
        col=c("#FF0000", "#0000FF"), lty = 1:1, cex=0.8, lwd=4)
+
+
 ```
 
 ```{r}
@@ -171,6 +170,32 @@ lines(prov2$DATE_, prov2$promUp,
 legend("topleft", legend=c("Tigo", "Movistar"),
        col=c("#FF0000", "#0000FF"), lty = 1:1, cex=0.8, lwd=4)
 ```
+
+```{r}
+plot(prov1$DATE_, prov1$promDown, type = "l",
+     frame = FALSE,
+     main="Histórico velocidades de subida y bajada\nde Tigo y Movistar",
+     xlab = "Fecha",
+     ylab = "Indicador de velocidad (porcentaje)",
+     col = "#00FFFF",
+     ylim=c(0.5,2.35), lwd=2)
+
+grid(NA, NULL, lwd = 2, equilogs = F)
+
+lines(prov1$DATE_, prov1$promUp,
+      col = "#FF0099", type = "l", lwd=2)
+
+lines(prov2$DATE_, prov2$promDown,
+      col = "#0000FF", type = "l", lwd=2)
+
+lines(prov2$DATE_, prov2$promUp,
+      col = "#FF0000", type = "l", lwd=2)
+
+legend("topleft", legend=c("V. Bajada Tigo", "V. Subida Tigo",
+                           "V. Bajada Movistar", "V. Subida Movistar"),
+       col=c("#00FFFF", "#FF0099", "#0000FF", "#FF0000"), lty = 1:1, cex=0.8, lwd=4)
+```
+
 ```{r}
 bdInternet %>%
   group_by(PROVIDER) %>%
@@ -231,6 +256,10 @@ ggplot(base1, aes(x = WEATHER, y = UPLOAD_INDICATOR)) +
 
 ```
 
+```{r}
+datosClimaConexion <- bdInternet %>%
+  select(WEATHER, CONNECTION_TYPE)
+```
 
 
 
