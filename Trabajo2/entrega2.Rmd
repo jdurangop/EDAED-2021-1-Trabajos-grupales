@@ -225,10 +225,8 @@ base1 <- bdInternet
 ggplot(base1, aes(x = WEATHER, y = DOWNLOAD_INDICATOR)) +
   geom_bar(position = "dodge",
            stat = "summary",
-           fun = "mean", aes(fill = WEATHER)) +
-  facet_grid(CONNECTION_TYPE~., scales = 'free') +
-   theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank()) +
+           fun = "mean", aes(fill = CONNECTION_TYPE)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   xlab("Clima") +
   ylab("Velocidad promedio de descarga") +
   ylim(0, 1.2) +
@@ -237,10 +235,8 @@ ggplot(base1, aes(x = WEATHER, y = DOWNLOAD_INDICATOR)) +
 ggplot(base1, aes(x = WEATHER, y = UPLOAD_INDICATOR)) +
   geom_bar(position = "dodge",
            stat = "summary",
-           fun = "mean", aes(fill = WEATHER)) +
-  facet_grid(CONNECTION_TYPE~., scales = 'free') +
-  theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank()) +
+           fun = "mean", aes(fill = CONNECTION_TYPE)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   xlab("Clima") +
   ylab("Velocidad promedio de carga") +
   ylim(0, 2.0) +
