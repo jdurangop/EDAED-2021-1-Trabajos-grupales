@@ -23,6 +23,7 @@ library(kableExtra)
 library(hrbrthemes)
 library(viridis)
 library(scales)
+library(gridExtra)
 ```
 
 ```{r}
@@ -134,6 +135,10 @@ prov1 <- dbProviders %>%
 prov2 <- dbProviders %>%
   filter(PROVIDER == "Movistar")
 ```
+```{r}
+
+```
+
 
 ```{r}
 plot(prov1$DATE_, prov1$promDown, type = "l",
@@ -174,7 +179,7 @@ legend("topleft", legend=c("Tigo", "Movistar"),
 ```{r}
 plot(prov1$DATE_, prov1$promDown, type = "l",
      frame = FALSE,
-     main="Histórico velocidades de subida y bajada\nde Tigo y Movistar",
+     main="Histórico velocidades de carga y descarga\nde Tigo y Movistar",
      xlab = "Fecha",
      ylab = "Indicador de velocidad (porcentaje)",
      col = "#00FFFF",
@@ -191,8 +196,8 @@ lines(prov2$DATE_, prov2$promDown,
 lines(prov2$DATE_, prov2$promUp,
       col = "#FF0000", type = "l", lwd=2)
 
-legend("topleft", legend=c("V. Bajada Tigo", "V. Subida Tigo",
-                           "V. Bajada Movistar", "V. Subida Movistar"),
+legend("topleft", legend=c("V. descarga Tigo", "V. carga Tigo",
+                           "V. descarga Movistar", "V. carga Movistar"),
        col=c("#00FFFF", "#FF0099", "#0000FF", "#FF0000"), lty = 1:1, cex=0.8, lwd=4)
 ```
 
@@ -214,42 +219,50 @@ plot_correlate(select(bdInternet, LATENCY_MS, DISTANCE_MILES, DOWNLOAD_INDICATOR
 
 #### **¿Hay diferencia entre cable y wifi con respecto al clima?**
 
-base1 <- bdInternet
+base1 <- bdInternet 
+base1$WEATHER[base1$WEATHER %in% c("lluvia",
+                                   "lluvia debil",
+                                   "tormentas eléctricas aisladas")] <- "lluvia"
+
+base1 <- base1%>%
+  filter(WEATHER != "soleado")
 
 
 ```
 
 ```{r}
- 
-
+#jpeg("promedios_clima_descarga.jpeg", width = 720, height = 480)
 ggplot(base1, aes(x = WEATHER, y = DOWNLOAD_INDICATOR)) +
   geom_bar(position = "dodge",
            stat = "summary",
            fun = "mean", aes(fill = CONNECTION_TYPE)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(text = element_text( size=12)) +
   xlab("Clima") +
   ylab("Velocidad promedio de descarga") +
-  ylim(0, 1.2) +
-  ggtitle("Distribución de promedios de velocidad de descarga\n segun el clima y el tipo de conexión.")
+  ylim(0, 1.5) +
+  ggtitle("Distribución de promedios de velocidad de descarga\n según el clima y el tipo de conexión.")
+#dev.off()
 
 ggplot(base1, aes(x = WEATHER, y = UPLOAD_INDICATOR)) +
   geom_bar(position = "dodge",
            stat = "summary",
            fun = "mean", aes(fill = CONNECTION_TYPE)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(text = element_text( size=12)) +
   xlab("Clima") +
   ylab("Velocidad promedio de carga") +
-  ylim(0, 2.0) +
-  ggtitle("Distribución de promedios de velocidad de carga\n segun el clima y el tipo de conexión.")
-
-
+  ylim(0, 1.5) +
+  ggtitle("Distribución de promedios de velocidad de carga\n según el clima y el tipo de conexión.")
 
 ## analisis
 
 #El clima afecta la velocidad de subida y de descarga dependiendo la conexión de cable de red o wifi.
 #La condición meteorológica que más afecta el clima a la velocidad  carga y descarga del internet tanto para la conexión de cable de red o wifi es la lluvia débil y  cuando es soleado son los  más efectos negativos creando interferencias puede tener sobre nuestro internet   puede ser por el factores. pocos datos que se tiene en las mediciones debido a la ola invernal que atraviesa nuestro departamento de Antioquia, la intensidad de la señal y mucho más con el sobrecalentamiento del equipo en días soleados y las lluvias débiles absorben esta frecuencia de radio y por tanto bloquean parcialmente  esta señal creando interferencias en la señal  contrario a las tormentas eléctricas que un principio se pensó que el afectaba la velocidad de descarga resulto una velocidad superior a los demás climas seguido por parcialmente nublado los demás climas tienen una velocidad constantes. 
 #La respuesta es definitivamente es no hay diferencia entre según su conexión de cable de red o wifi lo que hace que la conexión a internet es el clima.
-
+```
+```{r}
+bdInternet %>%
+  group_by(CONNECTION_TYPE, WEATHER) %>%
+  count(CONNECTION_TYPE, WEATHER)
 ```
 
 ```{r}
