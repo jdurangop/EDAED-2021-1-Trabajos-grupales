@@ -1,9 +1,16 @@
 ---
 title: "Estadística descriptiva y análisis exploratiorio de datos 2021-1\n\nTrabajo grupal 2"
-author: "Jeison Durango Cc 1214745706\n\nJoelle Rios Cc 1064978739\n\nDaniela Guardia Cuervo Cc 1007675467"
+author: "Jeison Durango Cc 1214745706\n\nJoelle Rios Cc 1064978739\n\nDaniela Guardia Cuervo Cc 1007675467\n\nJuan Esteban Restrepo Jaramillo"
 date: "2021/08/30"
 output: html_document
 ---
+<style>
+body {
+text-align: justify;
+font-family: "Segoe UI";
+font-size: 18px;
+}
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
@@ -27,110 +34,30 @@ library(gridExtra)
 ```
 
 ```{r}
-## Lectura de una base de datos tipo ".csv"
+## Lectura de la base de datos tipo ".csv"
 bdInternet <- read.csv("BD_Completa.csv", encoding = "UTF-8")
 
+## cambiamos el formato de la fecha
 bdInternet <- bdInternet %>%
   mutate(TEST_DATE = as.POSIXct(strptime(TEST_DATE, "%m/%d/%Y %H:%M")),
          DATE_ = as.Date(format(TEST_DATE, format = "%m/%d/%Y"), "%m/%d/%Y"))
 
+## separamos la hora de cada medición en una nueva variable para análisis futuros
 bdInternet <- bdInternet %>%
   mutate(TEST_HOUR = ifelse(format(TEST_DATE, format = "%H") %in% c("08", "09"), 9,
                             ifelse(format(TEST_DATE, format = "%H") %in% c("13", "14"), 14, 19)))
 
+## se corrigen errores tipográficos
 bdInternet$WEATHER[bdInternet$WEATHER %in% c("miuy nublado","muy nubblado")] <- "muy nublado"
 bdInternet$WEATHER[bdInternet$WEATHER == "nublado "] <- "nublado"
 bdInternet$SERVER_NAME[bdInternet$SERVER_NAME == "Medellin"] <- "Medellín"
 
+## eliminamos valores atípicos
 bdInternet$DOWNLOAD_INDICATOR[bdInternet$DOWNLOAD_INDICATOR >= 3] <- NA
 ```
 
 ```{r}
-tempLatencia <- bdInternet %>%
-  select(TEMPERATURE, LATENCY_MS)
-
-plot_correlate(tempLatencia)
-```
-
-```{r}
-tempLatencia %>%
-  group_by(TEMPERATURE) %>%
-  summarise(mediaLatencia = mean(LATENCY_MS)) %>%
-  plot()
-```
-
-```{r}
-bdInternet %>% select(SERVER_NAME, SERVER_COUNT) %>% count(SERVER_NAME, SERVER_COUNT)
-```
-
-```{r}
-propVelocidades <- bdInternet %>%
-  group_by(DATE_, TEST_HOUR) %>%
-  summarise(#PROM_DOWN = mean(DOWNLOAD_INDICATOR),
-            #PROM_UP = mean(UPLOAD_INDICATOR),
-            PROPORTION = DOWNLOAD_INDICATOR/UPLOAD_INDICATOR) %>%
-  select(DATE_, TEST_HOUR, PROPORTION)
-```
-
-```{r}
-ggplot(filter(propVelocidades, TEST_HOUR == 9), aes(x=DATE_, y=PROPORTION)) +
-  ylim(0,2.5)+
-  scale_x_date(date_breaks = "1 day", 
-                 labels=date_format("%a"),
-                 limits = as.Date(c('2021/07/28','2021/08/03')))+
-  labs(title="Proporción entre velocidad de bajada y subida\na la hora 9.",
-       x="Fecha", y="Proporción") +
-  theme(axis.text.x = element_text(vjust = 0.5, hjust=1)) +
-  geom_point() +
-  geom_smooth(method=lm , color="red", fill="#69b3a2", se=TRUE)
-
-filter(propVelocidades, TEST_HOUR == 9) %>%
-  group_by(DATE_) %>%
-  summarise(desv = sd(PROPORTION), prom=mean(PROPORTION)) %>% 
-  kbl() %>%  kable_styling()
-```
-```{r}
-ggplot(filter(propVelocidades, TEST_HOUR == 14), aes(x=DATE_, y=PROPORTION)) +
-  ylim(0,2.5)+
-  scale_x_date(date_breaks = "1 day", 
-                 labels=date_format("%a"),
-                 limits = as.Date(c('2021/07/28','2021/08/03')))+
-  labs(title="Proporción entre velocidad de bajada y subida\na la hora 14.",
-       x="Fecha", y="Proporción") +
-  theme(axis.text.x = element_text(vjust = 0.5, hjust=1)) +
-  geom_point() +
-  geom_smooth(method=lm , color="red", fill="#69b3a2", se=TRUE)
-
-filter(propVelocidades, TEST_HOUR == 14) %>%
-  group_by(DATE_) %>%
-  summarise(desv = sd(PROPORTION), prom=mean(PROPORTION)) %>% 
-  kbl() %>%  kable_styling()
-```
-```{r}
-ggplot(filter(propVelocidades, TEST_HOUR == 19), aes(x=DATE_, y=PROPORTION)) +
-  ylim(0,2.5)+
-  scale_x_date(date_breaks = "1 day", 
-                 labels=date_format("%a"),
-                 limits = as.Date(c('2021/07/28','2021/08/03')))+
-  labs(title="Proporción entre velocidad de bajada y subida\na la hora 19.",
-       x="Fecha", y="Proporción") +
-  theme(axis.text.x = element_text(vjust = 0.5, hjust=1)) +
-  geom_point() +
-  geom_smooth(method=lm , color="red", fill="#69b3a2", se=TRUE)
-
-filter(propVelocidades, TEST_HOUR == 19) %>%
-  group_by(DATE_) %>%
-  summarise(desv = sd(PROPORTION), prom=mean(PROPORTION)) %>% 
-  kbl() %>%  kable_styling()
-```
-```{r}
-<<<<<<< Updated upstream
-=======
-
-```
-
-```{r}
->>>>>>> Stashed changes
+## seleccionamos el proveedor y fecha y calculamos los promedios de los indicadores de velocidades.
 dbProviders <- bdInternet %>%
   group_by(PROVIDER, DATE_) %>%
   summarise(promDown = mean(DOWNLOAD_INDICATOR, na.rm=TRUE),
@@ -142,48 +69,11 @@ prov1 <- dbProviders %>%
 prov2 <- dbProviders %>%
   filter(PROVIDER == "Movistar")
 ```
-```{r}
 
-```
-
+## ¿Hay consistencia en las velocidades dadas por cada servidor según el plan de servicios pagados?
 
 ```{r}
-plot(prov1$DATE_, prov1$promDown, type = "l",
-     frame = FALSE,
-     main="Histórico contagios entre\n22-09-2020 y 08-03-2021 por cada grupo etario",
-     xlab = "Fecha",
-     ylab = "Casos reportados",
-     col = "#FF0000",
-     #xlim=c(as.Date("01-09-2020", "%d-%m-%Y"), as.Date("15-03-2021", "%d-%m-%Y")),
-     ylim=c(0.5,1.5), lwd=2)
-
-lines(prov2$DATE_, prov2$promDown,
-      col = "#0000FF", type = "l", lwd=2)
-
-legend("topleft", legend=c("Tigo", "Movistar"),
-       col=c("#FF0000", "#0000FF"), lty = 1:1, cex=0.8, lwd=4)
-
-
-```
-
-```{r}
-plot(prov1$DATE_, prov1$promUp, type = "l",
-     frame = FALSE,
-     main="Histórico contagios entre\n22-09-2020 y 08-03-2021 por cada grupo etario",
-     xlab = "Fecha",
-     ylab = "Casos reportados",
-     col = "#FF0000",
-     #xlim=c(as.Date("01-09-2020", "%d-%m-%Y"), as.Date("15-03-2021", "%d-%m-%Y")),
-     ylim=c(0.5,2.25), lwd=2)
-
-lines(prov2$DATE_, prov2$promUp,
-      col = "#0000FF", type = "l", lwd=2)
-
-legend("topleft", legend=c("Tigo", "Movistar"),
-       col=c("#FF0000", "#0000FF"), lty = 1:1, cex=0.8, lwd=4)
-```
-
-```{r}
+## graficamos el histórico velocidades de carga y descarga de Tigo y Movistar
 plot(prov1$DATE_, prov1$promDown, type = "l",
      frame = FALSE,
      main="Histórico velocidades de carga y descarga\nde Tigo y Movistar",
@@ -208,24 +98,28 @@ legend("topleft", legend=c("V. descarga Tigo", "V. carga Tigo",
        col=c("#00FFFF", "#FF0099", "#0000FF", "#FF0000"), lty = 1:1, cex=0.8, lwd=4)
 ```
 
+## ¿Las velocidades de internet y la latencia están definidas por la distancia al servidor?
+
 ```{r}
+## calculamos algunas medidas de resumen por cada proveedor de internet.
 bdInternet %>%
   group_by(PROVIDER) %>%
   summarise(promDown = mean(DOWNLOAD_INDICATOR, na.rm=TRUE),
             desvDown = sd(DOWNLOAD_INDICATOR, na.rm=TRUE),
             promUp = mean(UPLOAD_INDICATOR, na.rm=TRUE),
-            desvUp = sd(UPLOAD_INDICATOR, na.rm=TRUE))
+            desvUp = sd(UPLOAD_INDICATOR, na.rm=TRUE)) %>% 
+  kbl() %>%  kable_styling()
 ```
+
 ```{r}
+## graficamos la correlación entre la latencia, distancia del servidor, indicadores de carga y descarga.
 plot_correlate(select(bdInternet, LATENCY_MS, DISTANCE_MILES, DOWNLOAD_INDICATOR, UPLOAD_INDICATOR))
 ```
 
-
+## ¿El clima afecta las velocidades según el tipo de conexión?
 
 ```{r}
-
-#### **¿Hay diferencia entre cable y wifi con respecto al clima?**
-
+## Agrupamos los climas lluviosos como uno solo dado que los registros de estos individualmente no eran suficiente para un análisis.
 base1 <- bdInternet 
 base1$WEATHER[base1$WEATHER %in% c("lluvia",
                                    "lluvia debil",
@@ -233,12 +127,10 @@ base1$WEATHER[base1$WEATHER %in% c("lluvia",
 
 base1 <- base1%>%
   filter(WEATHER != "soleado")
-
-
 ```
 
 ```{r}
-#jpeg("promedios_clima_descarga.jpeg", width = 720, height = 480)
+# graficamos dos diagramas de barras de la distribución de promedios de velocidades de internet según el clima y tipo de conexión.
 ggplot(base1, aes(x = WEATHER, y = DOWNLOAD_INDICATOR)) +
   geom_bar(position = "dodge",
            stat = "summary",
@@ -248,7 +140,6 @@ ggplot(base1, aes(x = WEATHER, y = DOWNLOAD_INDICATOR)) +
   ylab("Velocidad promedio de descarga") +
   ylim(0, 1.5) +
   ggtitle("Distribución de promedios de velocidad de descarga\n según el clima y el tipo de conexión.")
-#dev.off()
 
 ggplot(base1, aes(x = WEATHER, y = UPLOAD_INDICATOR)) +
   geom_bar(position = "dodge",
@@ -259,24 +150,72 @@ ggplot(base1, aes(x = WEATHER, y = UPLOAD_INDICATOR)) +
   ylab("Velocidad promedio de carga") +
   ylim(0, 1.5) +
   ggtitle("Distribución de promedios de velocidad de carga\n según el clima y el tipo de conexión.")
-
-## analisis
-
-#El clima afecta la velocidad de subida y de descarga dependiendo la conexión de cable de red o wifi.
-#La condición meteorológica que más afecta el clima a la velocidad  carga y descarga del internet tanto para la conexión de cable de red o wifi es la lluvia débil y  cuando es soleado son los  más efectos negativos creando interferencias puede tener sobre nuestro internet   puede ser por el factores. pocos datos que se tiene en las mediciones debido a la ola invernal que atraviesa nuestro departamento de Antioquia, la intensidad de la señal y mucho más con el sobrecalentamiento del equipo en días soleados y las lluvias débiles absorben esta frecuencia de radio y por tanto bloquean parcialmente  esta señal creando interferencias en la señal  contrario a las tormentas eléctricas que un principio se pensó que el afectaba la velocidad de descarga resulto una velocidad superior a los demás climas seguido por parcialmente nublado los demás climas tienen una velocidad constantes. 
-#La respuesta es definitivamente es no hay diferencia entre según su conexión de cable de red o wifi lo que hace que la conexión a internet es el clima.
-```
-```{r}
-bdInternet %>%
-  group_by(CONNECTION_TYPE, WEATHER) %>%
-  count(CONNECTION_TYPE, WEATHER)
 ```
 
 ```{r}
-datosClimaConexion <- bdInternet %>%
-  select(WEATHER, CONNECTION_TYPE)
+## Agrupamos los indicadores de velocidad por hora de medición
+propVelocidades <- bdInternet %>%
+  group_by(DATE_, TEST_HOUR) %>%
+  summarise(PROPORTION = DOWNLOAD_INDICATOR/UPLOAD_INDICATOR) %>%
+  select(DATE_, TEST_HOUR, PROPORTION)
 ```
 
+## ¿La proporción entre velocidades de carga y descarga es constante a diferentes horas del día?
 
+```{r}
+## graficamos la tendencia lineal e intervalo de confianza de la proporción o indicador de velocidad a las 9am por cada día.
+ggplot(filter(propVelocidades, TEST_HOUR == 9), aes(x=DATE_, y=PROPORTION)) +
+  ylim(0,2.5)+
+  scale_x_date(date_breaks = "1 day", 
+                 labels=date_format("%a"),
+                 limits = as.Date(c('2021/07/28','2021/08/03')))+
+  labs(title="Proporción entre velocidad de bajada y subida\na la hora 9.",
+       x="Fecha", y="Proporción") +
+  theme(axis.text.x = element_text(vjust = 0.5, hjust=1)) +
+  geom_point() +
+  geom_smooth(method=lm , color="red", fill="#69b3a2", se=TRUE)
 
+filter(propVelocidades, TEST_HOUR == 9) %>%
+  group_by(DATE_) %>%
+  summarise(desv = sd(PROPORTION), prom=mean(PROPORTION)) %>% 
+  kbl() %>%  kable_styling()
+```
+
+```{r}
+## graficamos la tendencia lineal e intervalo de confianza de la proporción o indicador de velocidad a las 2pm por cada día.
+ggplot(filter(propVelocidades, TEST_HOUR == 14), aes(x=DATE_, y=PROPORTION)) +
+  ylim(0,2.5)+
+  scale_x_date(date_breaks = "1 day", 
+                 labels=date_format("%a"),
+                 limits = as.Date(c('2021/07/28','2021/08/03')))+
+  labs(title="Proporción entre velocidad de bajada y subida\na la hora 14.",
+       x="Fecha", y="Proporción") +
+  theme(axis.text.x = element_text(vjust = 0.5, hjust=1)) +
+  geom_point() +
+  geom_smooth(method=lm , color="red", fill="#69b3a2", se=TRUE)
+
+filter(propVelocidades, TEST_HOUR == 14) %>%
+  group_by(DATE_) %>%
+  summarise(desv = sd(PROPORTION, na.rm=TRUE), prom=mean(PROPORTION, na.rm=TRUE)) %>% 
+  kbl() %>%  kable_styling()
+```
+
+```{r}
+## graficamos la tendencia lineal e intervalo de confianza de la proporción o indicador de velocidad a las 7pm por cada día.
+ggplot(filter(propVelocidades, TEST_HOUR == 19), aes(x=DATE_, y=PROPORTION)) +
+  ylim(0,2.5)+
+  scale_x_date(date_breaks = "1 day", 
+                 labels=date_format("%a"),
+                 limits = as.Date(c('2021/07/28','2021/08/03')))+
+  labs(title="Proporción entre velocidad de bajada y subida\na la hora 19.",
+       x="Fecha", y="Proporción") +
+  theme(axis.text.x = element_text(vjust = 0.5, hjust=1)) +
+  geom_point() +
+  geom_smooth(method=lm , color="red", fill="#69b3a2", se=TRUE)
+
+filter(propVelocidades, TEST_HOUR == 19) %>%
+  group_by(DATE_) %>%
+  summarise(desv = sd(PROPORTION, na.rm=TRUE), prom=mean(PROPORTION, na.rm=TRUE)) %>% 
+  kbl() %>%  kable_styling()
+```
 
